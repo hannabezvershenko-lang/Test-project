@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Лучшая шаурма Людвигсбурга</title>
+  <meta name="description" content="Лучшая шаурма Людвигсбурга — мясо с вертела, тёплый лаваш с гриля и фирменный чесночный соус.">
+  <meta name="theme-color" content="#0b0907">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%2716%27 fill=%27%230b0907%27/%3E%3Cpath d=%27M16 6c2 3.5 6 5.5 6 11a6 6 0 0 1-12 0c0-2.7 1.4-4 2-5.4.7 2 1.4 2.7 2 2.7 0-3.4.7-6 2-8.3Z%27 fill=%27none%27 stroke=%27%23d6b07a%27 stroke-width=%271.4%27/%3E%3C/svg%3E">
+  <link rel="preload" href="assets/fonts/InterDisplay-Thin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/frames/f00.webp" as="image">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label">Открыть</span></div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <canvas class="embers" aria-hidden="true"></canvas>
+
+  <div class="frame">
+    <!-- ───────────── NAV ───────────── -->
+    <header class="nav">
+      <nav class="nav__links" aria-label="Основное меню">
+        <a href="#menu" class="link">Меню</a>
+        <a href="#recipe" class="link">Рецепт</a>
+        <a href="#visit" class="link">Где нас найти</a>
+      </nav>
+      <a href="#top" class="logo" aria-label="Лучшая шаурма Людвигсбурга — на главную">
+        <span class="logo__main">ЛУЧШАЯ ШАУРМА</span>
+        <span class="logo__sub">Ludwigsburg</span>
+      </a>
+      <div class="nav__right">
+        <a href="tel:+497141000000" class="link">Контакты</a>
+        <a href="#menu" class="pill magnetic">Заказать <i class="chev" aria-hidden="true"></i></a>
+      </div>
+    </header>
+
+    <!-- ───────────── HERO ───────────── -->
+    <main id="top">
+      <section class="hero">
+        <div class="hero__badge reveal" data-depth="0.6">
+          <div class="seal">
+            <svg viewBox="0 0 120 120" class="seal__ring" aria-hidden="true">
+              <defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+              <text><textPath href="#circ">ХАЛЯЛЬ · ВЕРТЕЛ · УГЛИ · КАЖДЫЙ ДЕНЬ · </textPath></text>
+            </svg>
+            <svg viewBox="0 0 48 48" class="seal__icon" aria-hidden="true">
+              <path d="M24 6c3 5 9 8 9 16a9 9 0 0 1-18 0c0-4 2-6 3-8 1 3 2 4 3 4 0-5 1-9 3-12Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M20 30c0 3 2 5 4 5s4-2 4-5c0-2-2-4-4-6-2 2-4 4-4 6Z" fill="currentColor" opacity=".55"/>
+            </svg>
+          </div>
+          <p class="hero__kicker">Донер и шаурма<br>на открытом огне</p>
+        </div>
+
+        <h1 class="headline" aria-label="Лучшая шаурма">
+          <span class="headline__a" data-depth="1.2" aria-hidden="true">ЛУЧШАЯ</span>
+          <span class="headline__b" data-depth="1.6" aria-hidden="true">ШАУРМА</span>
+        </h1>
+
+        <div class="since reveal" data-depth="0.8">
+          <span class="since__dot"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17V3m0 1h9l-2 3.5L14 11H5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+          <span>С 2016 · Людвигсбург</span>
+        </div>
+
+        <!-- центральный продукт: кадры 3D-рендера, раскрытие по наведению -->
+        <div class="product" id="product" tabindex="0" role="button" aria-pressed="false" aria-label="Шаурма: наведите или нажмите, чтобы раскрыть">
+          <div class="product__glow" aria-hidden="true"></div>
+          <div class="product__tilt">
+            <img class="product__poster" src="assets/frames/f00.webp" alt="" width="960" height="1200">
+            <canvas class="product__canvas" width="960" height="1200" aria-hidden="true"></canvas>
+          </div>
+          <div class="product__hint" aria-hidden="true"><span>Наведи — раскроется</span></div>
+        </div>
+
+        <!-- карточка справа сверху (в референсе — видео с врачом) -->
+        <a href="#recipe" class="chef reveal" data-depth="0.5">
+          <img src="assets/img/macro.webp" alt="Крупный план начинки: мясо с вертела, томаты, лук и чесночный соус" loading="eager" width="720" height="900">
+          <span class="chef__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+          <span class="chef__caption">Что внутри</span>
+        </a>
+
+      </section>
+
+      <!-- ───────────── BOTTOM ROW ───────────── -->
+      <section class="tiles">
+        <article class="tile tile--type tilt reveal">
+          <div class="tile__type">
+            <span>ЖАР</span>
+            <span class="outline">УГЛИ</span>
+            <span>ВКУС</span>
+          </div>
+          <img class="tile__float" src="assets/img/slice.webp" alt="" aria-hidden="true">
+        </article>
+
+        <article class="tile tile--light tilt reveal">
+          <header class="tile__head">
+            <h2>Соус по семейному рецепту</h2>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </header>
+          <div class="tile__plate" aria-hidden="true"></div>
+          <img class="tile__img" src="assets/img/open.webp" alt="Раскрытая шаурма с начинкой" loading="lazy">
+        </article>
+
+        <article class="tile tile--scene reveal">
+          <div class="tile__smoke" aria-hidden="true"></div>
+          <img class="tile__leaf" src="assets/img/flake.webp" alt="" aria-hidden="true">
+          <p class="tile__copy">Говядина и курица с вертела, хрустящие овощи и чесночный соус — в лаваше прямо с гриля.</p>
+          <a href="#menu" class="underline">Смотреть меню <i class="chev" aria-hidden="true"></i></a>
+        </article>
+      </section>
+
+      <!-- ───────────── MARQUEE ───────────── -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+          <span>Говядина</span><i>✦</i><span>Курица</span><i>✦</i><span>Лаваш с гриля</span><i>✦</i><span>Чесночный соус</span><i>✦</i><span>Маринованный лук</span><i>✦</i><span>Свежие томаты</span><i>✦</i>
+          <span>Говядина</span><i>✦</i><span>Курица</span><i>✦</i><span>Лаваш с гриля</span><i>✦</i><span>Чесночный соус</span><i>✦</i><span>Маринованный лук</span><i>✦</i><span>Свежие томаты</span><i>✦</i>
+        </div>
+      </div>
+
+      <!-- ───────────── MENU ───────────── -->
+      <section class="menu" id="menu">
+        <div class="section-head reveal">
+          <span class="eyebrow">02 — Меню</span>
+          <h2 class="section-title">Четыре позиции.<br><em>Ни одной лишней.</em></h2>
+        </div>
+        <div class="menu__grid">
+          <article class="dish tilt reveal">
+            <span class="dish__no">01</span>
+            <h3>Классика</h3>
+            <p>Говядина с вертела, томаты, огурцы, красный лук, чесночный соус.</p>
+            <div class="dish__foot"><span class="price">8,90 €</span><button class="add magnetic" type="button" aria-label="Добавить Классику">+</button></div>
+          </article>
+          <article class="dish tilt reveal">
+            <span class="dish__no">02</span>
+            <h3>Курица на углях</h3>
+            <p>Маринованное бедро, капуста, маринованные огурцы, соус с зеленью.</p>
+            <div class="dish__foot"><span class="price">7,90 €</span><button class="add magnetic" type="button" aria-label="Добавить Курицу на углях">+</button></div>
+          </article>
+          <article class="dish dish--hot tilt reveal">
+            <span class="dish__no">03</span>
+            <span class="tag">Хит</span>
+            <h3>Острая чёрная</h3>
+            <p>Двойное мясо, халапеньо, копчёная паприка, соус на углях.</p>
+            <div class="dish__foot"><span class="price">10,50 €</span><button class="add magnetic" type="button" aria-label="Добавить Острую чёрную">+</button></div>
+          </article>
+          <article class="dish tilt reveal">
+            <span class="dish__no">04</span>
+            <h3>Фалафель</h3>
+            <p>Нут, хумус, печёный перец, рукола, тахини. Без мяса, но с огнём.</p>
+            <div class="dish__foot"><span class="price">7,50 €</span><button class="add magnetic" type="button" aria-label="Добавить Фалафель">+</button></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ───────────── RECIPE ───────────── -->
+      <section class="recipe" id="recipe">
+        <div class="recipe__media reveal">
+          <img src="assets/img/macro-wide.webp" alt="Начинка шаурмы крупным планом" loading="lazy">
+        </div>
+        <div class="recipe__body">
+          <div class="section-head reveal">
+            <span class="eyebrow">03 — Рецепт</span>
+            <h2 class="section-title">Двенадцать часов<br><em>до первого укуса.</em></h2>
+          </div>
+          <ol class="steps">
+            <li class="reveal"><span>01</span><div><h3>Маринад на ночь</h3><p>Специи, йогурт и лимон. Мясо маринуется минимум двенадцать часов.</p></div></li>
+            <li class="reveal"><span>02</span><div><h3>Вертел и огонь</h3><p>Срезаем тонко и только с края, где мясо уже успело зарумяниться.</p></div></li>
+            <li class="reveal"><span>03</span><div><h3>Лаваш с гриля</h3><p>Каждую шаурму доводим на гриле до золотистых полос, а потом заворачиваем.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ───────────── VISIT ───────────── -->
+      <section class="visit" id="visit">
+        <div class="visit__big reveal" aria-hidden="true">LUDWIGSBURG</div>
+        <div class="visit__grid">
+          <div class="reveal">
+            <span class="eyebrow">Адрес</span>
+            <p>Musterstraße 1<br>71634 Ludwigsburg</p>
+          </div>
+          <div class="reveal">
+            <span class="eyebrow">Часы</span>
+            <p>Пн–Чт 11:00–23:00<br>Пт–Сб 11:00–02:00<br>Вс 12:00–22:00</p>
+          </div>
+          <div class="reveal">
+            <span class="eyebrow">Заказ</span>
+            <p><a class="underline" href="tel:+497141000000">+49 7141 000000</a></p>
+            <a href="tel:+497141000000" class="pill pill--solid magnetic">Позвонить <i class="chev" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> Лучшая шаурма Людвигсбурга</span>
+      <span>Сделано на огне</span>
+    </footer>
+  </div>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
