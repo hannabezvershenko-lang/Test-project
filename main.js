@@ -278,13 +278,13 @@
 
   // ───────────── game: build your own shawarma ─────────────
   const INGREDIENTS = [
-    { key: "chicken", name: "Курица", price: 3.0, w: 70, h: 12 },
-    { key: "lettuce", name: "Салат", price: 0.5, w: 72, h: 10 },
-    { key: "tomato", name: "Томат", price: 0.6, w: 64, h: 9 },
-    { key: "cucumber", name: "Огурец", price: 0.5, w: 60, h: 8 },
-    { key: "onion", name: "Красный лук", price: 0.4, w: 60, h: 8 },
-    { key: "sauce", name: "Чесночный соус", price: 0.7, w: 58, h: 9 },
-    { key: "herbs", name: "Зелень", price: 0.3, w: 52, h: 6 },
+    { key: "chicken", name: "Курица", price: 3.0, w: 56, h: 12 },
+    { key: "lettuce", name: "Салат", price: 0.5, w: 58, h: 11 },
+    { key: "tomato", name: "Томат", price: 0.6, w: 52, h: 10 },
+    { key: "cucumber", name: "Огурец", price: 0.5, w: 50, h: 9 },
+    { key: "onion", name: "Красный лук", price: 0.4, w: 48, h: 9 },
+    { key: "sauce", name: "Чесночный соус", price: 0.7, w: 48, h: 10 },
+    { key: "herbs", name: "Зелень", price: 0.3, w: 44, h: 8 },
   ];
   const BASE_PRICE = 2.9;
   const euro = (v) => `${v.toFixed(2).replace(".", ",")} €`;
@@ -323,7 +323,7 @@
     priceEl.textContent = euro(total);
     board.classList.toggle("has-items", picked.length > 0);
     // restack: each layer sits on the one below it
-    let bottom = 19;
+    let bottom = 22;
     const items = [...stack.children].filter((el) => !el.classList.contains("is-leaving"));
     const step = picked.length > 5 ? 0.75 : 1;
     for (const el of items) {
