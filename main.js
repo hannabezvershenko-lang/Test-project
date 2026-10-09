@@ -1,7 +1,9 @@
 (() => {
   "use strict";
 
-  const FRAME_COUNT = 24;
+  const FRAME_COUNT = 36;
+  // label anchors projected from the 3D scene (x of the layer's right edge, y of its centre), 0..1 of the frame
+  const LABELS = [{"label": "лаваш", "right": 0.7137, "y": 0.6523}, {"label": "салат латук", "right": 0.6679, "y": 0.5774}, {"label": "куриное филе", "right": 0.7071, "y": 0.502}, {"label": "томат", "right": 0.6441, "y": 0.4261}, {"label": "свежий огурец", "right": 0.6647, "y": 0.3497}, {"label": "красный лук", "right": 0.6476, "y": 0.2729}, {"label": "чесночный соус", "right": 0.6266, "y": 0.1956}, {"label": "зелень", "right": 0.6478, "y": 0.1178}];
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -76,6 +78,27 @@
       ctx.globalAlpha = f;
       ctx.drawImage(frames[i + 1], 0, 0, canvas.width, canvas.height);
     }
+  }
+
+  // ingredient labels with leader lines, shown as each layer lands
+  const labelList = product.querySelector(".product__labels");
+  const labelCol = LABELS.length ? Math.max(...LABELS.map((l) => l.right)) + 0.05 : 0;
+  const labelEls = LABELS.map((l, i) => {
+    const li = document.createElement("li");
+    li.textContent = l.label;
+    li.style.top = `${l.y * 100}%`;
+    li.style.left = `${(l.right + 0.01) * 100}%`;
+    labelList.appendChild(li);
+    return { li, l, at: 0.5 + 0.055 * i };
+  });
+  function layoutLabels() {
+    const w = product.getBoundingClientRect().width;
+    for (const { li, l } of labelEls) li.style.setProperty("--line-w", `${Math.max(16, (labelCol - l.right) * w)}px`);
+  }
+  layoutLabels();
+  addEventListener("resize", layoutLabels);
+  function updateLabels() {
+    for (const e of labelEls) e.li.classList.toggle("is-on", progress >= e.at);
   }
 
   const setOpen = (open) => {
@@ -176,6 +199,7 @@
     progress = reduceMotion ? target : lerp(progress, target, 0.085);
     if (Math.abs(progress - target) < 0.0005) progress = target;
     drawProduct();
+    updateLabels();
 
     if (finePointer) {
       cur.x = lerp(cur.x, pointer.x, 0.22);
@@ -239,14 +263,202 @@
   const orderPill = document.querySelector(".nav .pill");
   const orderLabel = orderPill.firstChild;
   let count = 0;
+  function bumpOrder(delta) {
+    count = Math.max(0, count + delta);
+    orderLabel.textContent = count ? `Заказать · ${count} ` : "Заказать ";
+    orderPill.animate([{ transform: "scale(1)" }, { transform: "scale(1.08)" }, { transform: "scale(1)" }], { duration: 400 });
+  }
   for (const btn of document.querySelectorAll(".add")) {
     btn.addEventListener("click", () => {
       const added = btn.classList.toggle("is-added");
       btn.textContent = added ? "✓" : "+";
-      count += added ? 1 : -1;
-      orderLabel.textContent = count ? `Заказать · ${count} ` : "Заказать ";
+      bumpOrder(added ? 1 : -1);
     });
   }
+
+  // ───────────── game: build your own shawarma ─────────────
+  const INGREDIENTS = [
+    { key: "chicken", name: "Курица", price: 3.0, w: 70, h: 12 },
+    { key: "lettuce", name: "Салат", price: 0.5, w: 72, h: 10 },
+    { key: "tomato", name: "Томат", price: 0.6, w: 64, h: 9 },
+    { key: "cucumber", name: "Огурец", price: 0.5, w: 60, h: 8 },
+    { key: "onion", name: "Красный лук", price: 0.4, w: 60, h: 8 },
+    { key: "sauce", name: "Чесночный соус", price: 0.7, w: 58, h: 9 },
+    { key: "herbs", name: "Зелень", price: 0.3, w: 52, h: 6 },
+  ];
+  const BASE_PRICE = 2.9;
+  const euro = (v) => `${v.toFixed(2).replace(".", ",")} €`;
+  const board = document.getElementById("board");
+  const stack = document.getElementById("stack");
+  const pantry = document.getElementById("pantry");
+  const priceEl = document.getElementById("game-price");
+  const mainBtn = document.getElementById("game-main");
+  const resetBtn = document.getElementById("game-reset");
+  const doneEl = document.getElementById("game-done");
+  const steps = [...document.querySelectorAll(".game__steps li")];
+  const burst = board.querySelector(".board__burst");
+  let picked = []; // keys in the order they were added
+  let stage = "build"; // build → wrapped → ordered
+
+  const chips = INGREDIENTS.map((ing) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "ing";
+    b.dataset.key = ing.key;
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<img src="assets/img/ing/${ing.key}.webp" alt="" draggable="false"><b>${ing.name}</b><small>+${euro(ing.price)}</small>`;
+    pantry.appendChild(b);
+    return b;
+  });
+
+  function setStep(n) {
+    steps.forEach((li, i) => {
+      li.classList.toggle("is-active", i === n - 1);
+      li.classList.toggle("is-done", i < n - 1);
+    });
+  }
+
+  function render() {
+    const total = BASE_PRICE + picked.reduce((s, k) => s + INGREDIENTS.find((i) => i.key === k).price, 0);
+    priceEl.textContent = euro(total);
+    board.classList.toggle("has-items", picked.length > 0);
+    // restack: each layer sits on the one below it
+    let bottom = 19;
+    const items = [...stack.children].filter((el) => !el.classList.contains("is-leaving"));
+    const step = picked.length > 5 ? 0.75 : 1;
+    for (const el of items) {
+      const ing = INGREDIENTS.find((i) => i.key === el.dataset.key);
+      el.style.setProperty("--b", `${bottom}%`);
+      el.style.setProperty("--w", `${ing.w}%`);
+      bottom += ing.h * step;
+    }
+    for (const c of chips) {
+      const on = picked.includes(c.dataset.key);
+      c.classList.toggle("is-in", on);
+      c.setAttribute("aria-pressed", String(on));
+      c.disabled = stage !== "build";
+    }
+    if (stage === "build") {
+      mainBtn.disabled = picked.length === 0;
+      mainBtn.firstChild.textContent = "Завернуть ";
+    }
+    if (stage === "wrapped") {
+      mainBtn.disabled = false;
+      mainBtn.firstChild.textContent = `Заказать · ${euro(total)} `;
+    }
+    if (stage === "ordered") mainBtn.disabled = true;
+  }
+
+  function toggle(key, forceAdd = false) {
+    if (stage !== "build") return;
+    const chip = chips.find((c) => c.dataset.key === key);
+    if (picked.includes(key)) {
+      if (forceAdd) {
+        chip.classList.remove("is-wiggle"); void chip.offsetWidth; chip.classList.add("is-wiggle");
+        return;
+      }
+      picked = picked.filter((k) => k !== key);
+      const el = stack.querySelector(`[data-key="${key}"]`);
+      el.classList.add("is-leaving");
+      setTimeout(() => { el.remove(); render(); }, 400);
+    } else {
+      picked.push(key);
+      const img = document.createElement("img");
+      img.src = `assets/img/ing/${key}.webp`;
+      img.alt = INGREDIENTS.find((i) => i.key === key).name;
+      img.dataset.key = key;
+      img.draggable = false;
+      stack.appendChild(img);
+    }
+    render();
+  }
+
+  function sparkle() {
+    const colors = ["#e3793c", "#d6b07a", "#f1e8dc", "#7fae3a", "#c8321f"];
+    for (let i = 0; i < 26; i++) {
+      const s = document.createElement("i");
+      const a = (i / 26) * Math.PI * 2;
+      const d = 120 + Math.random() * 120;
+      s.style.setProperty("--x", `${Math.cos(a) * d}px`);
+      s.style.setProperty("--y", `${Math.sin(a) * d}px`);
+      s.style.setProperty("--c", colors[i % colors.length]);
+      burst.appendChild(s);
+      setTimeout(() => s.remove(), 1000);
+    }
+  }
+
+  mainBtn.addEventListener("click", () => {
+    if (stage === "build" && picked.length) {
+      stage = "wrapped";
+      board.classList.add("is-wrapping");
+      setTimeout(() => { board.classList.add("is-wrapped"); sparkle(); }, 700);
+      setStep(3);
+      render();
+    } else if (stage === "wrapped") {
+      stage = "ordered";
+      bumpOrder(1);
+      doneEl.hidden = false;
+      sparkle();
+      steps.forEach((li) => { li.classList.remove("is-active"); li.classList.add("is-done"); });
+      render();
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    stage = "build";
+    picked = [];
+    stack.innerHTML = "";
+    board.classList.remove("is-wrapping", "is-wrapped");
+    doneEl.hidden = true;
+    setStep(1);
+    render();
+  });
+
+  // tap to add / remove, or drag a chip onto the lavash
+  for (const chip of chips) {
+    let start = null;
+    let ghost = null;
+    chip.addEventListener("pointerdown", (e) => {
+      if (chip.disabled) return;
+      start = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      chip.setPointerCapture(e.pointerId);
+    });
+    chip.addEventListener("pointermove", (e) => {
+      if (!start || e.pointerId !== start.id) return;
+      if (!ghost && Math.hypot(e.clientX - start.x, e.clientY - start.y) > 8) {
+        ghost = document.createElement("img");
+        ghost.src = `assets/img/ing/${chip.dataset.key}.webp`;
+        ghost.className = "drag-ghost";
+        document.body.appendChild(ghost);
+      }
+      if (ghost) {
+        ghost.style.left = `${e.clientX}px`;
+        ghost.style.top = `${e.clientY}px`;
+        const r = board.getBoundingClientRect();
+        board.classList.toggle("is-over", e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom);
+      }
+    });
+    const end = (e) => {
+      if (!start) return;
+      if (ghost) {
+        const over = board.classList.contains("is-over");
+        ghost.remove();
+        ghost = null;
+        board.classList.remove("is-over");
+        if (over) toggle(chip.dataset.key, true);
+      } else if (e.type === "pointerup") {
+        toggle(chip.dataset.key);
+      }
+      start = null;
+    };
+    chip.addEventListener("pointerup", end);
+    chip.addEventListener("pointercancel", end);
+    // keyboard
+    chip.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(chip.dataset.key); }
+    });
+  }
+  render();
 
   // ───────────── scroll reveal ─────────────
   const io = new IntersectionObserver((entries) => {
