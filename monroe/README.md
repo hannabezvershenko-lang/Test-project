@@ -7,6 +7,15 @@ python3 -m http.server 8000
 # open http://localhost:8000/monroe/
 ```
 
+## One file
+
+`monroe.html` is the whole site in a single self-contained file (fonts, images and three.js inlined, works
+offline from disk). The three pages become views inside it, with the same curtain transition. Rebuild it with:
+
+```bash
+python3 monroe/tools/build.py && python3 monroe/tools/bundle.py
+```
+
 ## Pages
 
 | File | What it is |

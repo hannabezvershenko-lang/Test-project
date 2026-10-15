@@ -5,6 +5,8 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const SLOW = reduced ? 0 : 600;
+  // single-file build: pages are .view blocks in one document, links are #ids
+  const spa = body.hasAttribute('data-spa');
 
   /* ---------- page transition: curtain in, navigate, curtain out ---------- */
 
@@ -41,6 +43,11 @@
     const a = e.target.closest('a[href]');
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (a.target === '_blank' || a.hasAttribute('download')) return;
+    if (spa && a.getAttribute('href').startsWith('#')) {
+      e.preventDefault();
+      go(a.getAttribute('href').slice(1));
+      return;
+    }
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return;
     const samePage = url.pathname === location.pathname && url.search === location.search;
@@ -133,9 +140,11 @@
       const box = el.parentElement;
       const cs = getComputedStyle(box);
       const target = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      if (target <= 0) return; // inside a hidden view
       el.style.fontSize = '100px';
       const chars = el.querySelectorAll('.ch');
       const w = chars[chars.length - 1].getBoundingClientRect().right - chars[0].getBoundingClientRect().left;
+      if (w <= 0) return;
       el.style.fontSize = (100 * target / w).toFixed(2) + 'px';
       box.parentElement.style.setProperty('--caps-h', el.getBoundingClientRect().height + 'px');
     });
@@ -183,6 +192,56 @@
       });
     }, { rootMargin: '-35% 0px -60% 0px' });
     document.querySelectorAll('.cat').forEach((s) => cio.observe(s));
+  }
+
+  /* ---------- single-file views ---------- */
+
+  const views = [...document.querySelectorAll('.view')];
+  const titles = { home: 'MONROE / Beauty salon in Stuttgart', prices: 'Prices / MONROE Beauty Salon Stuttgart', studio: 'Studio and booking / MONROE Stuttgart' };
+
+  function locate(id) {
+    const el = (id && document.getElementById(id)) || views[0];
+    return { el, view: el.classList.contains('view') ? el : el.closest('.view') || views[0] };
+  }
+
+  function show(id, push) {
+    const { el, view } = locate(id);
+    views.forEach((v) => { v.hidden = v !== view; });
+    body.className = body.className.replace(/page--\S+/, 'page--' + view.dataset.page);
+    document.title = titles[view.id] || document.title;
+    nav.querySelectorAll('.nav__link').forEach((a) => {
+      if (a.getAttribute('href') === '#' + view.id) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    fitCaps();
+    if (el === view) window.scrollTo(0, 0);
+    else el.scrollIntoView();
+    if (push) history.pushState(null, '', '#' + (id || view.id));
+    dispatchEvent(new Event('view:change'));
+  }
+
+  function go(id) {
+    const { el, view } = locate(id);
+    closeMenu();
+    if (!view.hidden) {
+      if (el === view) window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      else el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+      history.replaceState(null, '', '#' + id);
+      return;
+    }
+    curtain.classList.remove('is-out');
+    curtain.classList.add('is-in');
+    setTimeout(() => {
+      show(id, true);
+      curtain.classList.remove('is-in');
+      curtain.classList.add('is-out');
+      setTimeout(() => curtain.classList.remove('is-out'), SLOW);
+    }, SLOW);
+  }
+
+  if (spa) {
+    show(location.hash.slice(1), false);
+    addEventListener('popstate', () => show(location.hash.slice(1), false));
   }
 
   /* ---------- go ---------- */
