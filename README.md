@@ -39,3 +39,7 @@ python3 -m http.server 8000
 ## Что заменить перед запуском
 
 Адрес, телефон, часы работы и цены в `index.html` — заглушки.
+
+---
+
+**MONROE**: a separate pink beauty-salon site lives in [`monroe/`](monroe/README.md).

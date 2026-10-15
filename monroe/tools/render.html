@@ -1,0 +1,15 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:radial-gradient(120% 90% at 50% 38%,#fff3f6 0%,#f9d7e1 46%,#efb3c5 100%)}
+canvas{display:block;width:100%;height:100%}
+</style></head><body><canvas id="c"></canvas>
+<script type="module">
+import { createScene } from '../assets/scene.js';
+const q = new URLSearchParams(location.search);
+const kind = q.get('kind') || 'pearls';
+if (q.get('bg') === 'none') document.body.style.background = 'transparent';
+const s = createScene(document.getElementById('c'), { kind, fit: (w,h) => ({ x: +(q.get('x') || 0), y: 0.05, scale: +(q.get('s') || (w/h < 1 ? 0.95 : 1.15)) }) });
+s.renderStill(1.2);
+document.body.dataset.ready = '1';
+</script></body></html>

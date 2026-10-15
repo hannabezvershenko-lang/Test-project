@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{desc}}">
+<meta name="theme-color" content="#fbe7ed">
+<link rel="preload" href="assets/fonts/BodoniModa.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Jost.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23d8427c'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' text-anchor='middle' fill='%23fff6f9'%3EM%3C/text%3E%3C/svg%3E">
+<script>
+  document.documentElement.classList.remove('no-js');
+  try { if (sessionStorage.getItem('monroe-nav')) { document.documentElement.classList.add('is-entering'); sessionStorage.removeItem('monroe-nav'); } } catch (e) {}
+</script>
+</head>
+<body class="page page--{{page}}">
+<div class="curtain" aria-hidden="true"><span class="curtain__word">MONROE</span></div>
+
+<header class="header">
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">
+    <span class="menu-btn__icon" aria-hidden="true"></span>
+    <span class="menu-btn__label"><span>Menu</span><span>Close</span></span>
+  </button>
+  <a class="brand" href="index.html" aria-label="MONROE, home">MONROE</a>
+  <a class="btn book" href="studio.html#visit">Book a visit</a>
+</header>
+
+<nav class="nav" id="nav" aria-label="Main" inert>
+  <ul class="nav__list">
+    <li class="nav__item"><a class="nav__link" href="index.html" data-img="assets/img/pearls.webp"{{cur-home}}><small>01</small><i>Home</i></a></li>
+    <li class="nav__item"><a class="nav__link" href="menu.html" data-img="assets/img/nails.webp"{{cur-menu}}><small>02</small><i>Prices</i></a></li>
+    <li class="nav__item"><a class="nav__link" href="studio.html" data-img="assets/img/studio.webp"{{cur-studio}}><small>03</small><i>Studio</i></a></li>
+    <li class="nav__item"><a class="nav__link" href="studio.html#visit" data-img="assets/img/makeup.webp"><small>04</small><i>Book</i></a></li>
+  </ul>
+  <div class="nav__aside">
+    <div><p class="eyebrow">Services</p><p>Nails / Lashes &amp; brows / Hair / Skin / Make-up</p></div>
+    <div><p class="eyebrow">Open</p><p>Tue–Fri 10:00–20:00<br>Sat 10:00–18:00</p></div>
+    <div><p class="eyebrow">Bookings</p><p><a class="link" href="tel:+4971100000000">+49 711 000 000 00</a></p></div>
+  </div>
+</nav>
+<div class="nav__peek" aria-hidden="true"><img src="assets/img/pearls.webp" alt=""></div>
