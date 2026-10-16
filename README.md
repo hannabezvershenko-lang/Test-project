@@ -39,3 +39,14 @@ python3 -m http.server 8000
 ## Что заменить перед запуском
 
 Адрес, телефон, часы работы и цены в `index.html` — заглушки.
+
+## `space/` — Cinematic space-travel landing
+
+Отдельная страница: Hero + Capabilities с зацикленными фоновыми видео (rAF-кроссфейд), liquid-glass UI и анимациями Framer Motion.
+React, Babel, Tailwind и Framer Motion грузятся с CDN, компоненты лежат в `space/components/*.jsx`.
+Babel подгружает `.jsx` по сети, поэтому открывать через сервер, а не `file://`:
+
+```bash
+python3 -m http.server 8000
+# открыть http://localhost:8000/space/
+```
