@@ -49,7 +49,7 @@
   const mobileMenu = $('#mobileMenu');
   const setMenu = (open) => {
     burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    burger.setAttribute('aria-label', open ? 'Закрити меню' : 'Відкрити меню');
     mobileMenu.hidden = !open;
     document.body.style.overflow = open ? 'hidden' : '';
   };
@@ -116,7 +116,7 @@
   const carTilt = $('.car-tilt', stage);
   const carShape = $('.car', stage);
   const hintText = $('.hint-text', stage);
-  if (!canHover) hintText.textContent = 'Нажмите на автомобиль';
+  if (!canHover) hintText.textContent = 'Торкніться автомобіля';
 
   const setOpen = (open) => stage.classList.toggle('is-open', open);
   // Open only when the pointer is over the car itself, not the empty stage around it
@@ -145,7 +145,7 @@
   }
   stage.setAttribute('tabindex', '0');
   stage.setAttribute('role', 'button');
-  stage.setAttribute('aria-label', 'Noctis GT Obsidian: открыть двери и включить фары');
+  stage.setAttribute('aria-label', 'Noctis GT Obsidian: відчинити двері та ввімкнути фари');
   stage.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!stage.classList.contains('is-open')); }
   });
@@ -304,7 +304,7 @@
   $$('.reveal').forEach((el) => revealIO.observe(el));
 
   /* ───────────── Count-up numbers ───────────── */
-  const fmt = (n) => n.toLocaleString('ru-RU');
+  const fmt = (n) => n.toLocaleString('uk-UA');
   const countIO = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -322,6 +322,16 @@
     });
   }, { threshold: 0.4 });
   $$('[data-count]').forEach((el) => countIO.observe(el));
+
+  /* ───────────── Catalog photos ───────────── */
+  $$('.model-card__media img').forEach((img) => {
+    const card = img.closest('.model-card');
+    const ok = () => card.classList.toggle('has-photo', img.naturalWidth > 0);
+    // lazy images can report complete before they load, so always listen as well
+    img.addEventListener('load', ok);
+    img.addEventListener('error', ok);
+    if (img.complete) ok();
+  });
 
   /* ───────────── Model filters ───────────── */
   const cards = $$('.model-card');
@@ -342,7 +352,7 @@
   }));
 
   /* ───────────── Configurator ───────────── */
-  const BASE = 28900000;
+  const BASE = 395000;
   const paints = {
     obsidian: { hi: '#3b3b42', mid: '#121216', lo: '#050506', paint: '#16161a', accent: '#ff9a3c' },
     ember:    { hi: '#e0752f', mid: '#7a2a0c', lo: '#1e0904', paint: '#c4521c', accent: '#ffc27a' },
@@ -355,7 +365,7 @@
   const configVisual = $('.config__visual');
   let colorPrice = 0;
   let shownTotal = BASE;
-  const rub = (n) => fmt(Math.round(n)) + ' ₽';
+  const usd = (n) => '$' + fmt(Math.round(n));
 
   const recalc = () => {
     const pkg = +($('input[name="pkg"]:checked') || { value: 0 }).value;
@@ -363,10 +373,10 @@
     const target = BASE + colorPrice + pkg + opts;
     const from = shownTotal, t0 = performance.now();
     shownTotal = target;
-    if (reduceMotion) { totalEl.textContent = rub(target); return; }
+    if (reduceMotion) { totalEl.textContent = usd(target); return; }
     const step = (t) => {
       const k = Math.min(1, (t - t0) / 600);
-      totalEl.textContent = rub(from + (target - from) * (1 - Math.pow(1 - k, 3)));
+      totalEl.textContent = usd(from + (target - from) * (1 - Math.pow(1 - k, 3)));
       if (k < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -426,20 +436,28 @@
     }
   });
 
-  // phone mask: +7 (XXX) XXX-XX-XX
+  // phone mask: +38 (0XX) XXX-XX-XX — accepts 067…, 67…, 380…, +380…, 8067…
   const phone = $('input[name="phone"]', form);
-  phone.addEventListener('input', () => {
-    let d = phone.value.replace(/\D/g, '');
-    if (d.startsWith('8')) d = '7' + d.slice(1);
-    if (d && !d.startsWith('7')) d = '7' + d;
-    d = d.slice(0, 11);
-    const p = d.slice(1);
-    let out = d ? '+7' : '';
-    if (p.length) out += ' (' + p.slice(0, 3);
-    if (p.length >= 3) out += ')';
-    if (p.length > 3) out += ' ' + p.slice(3, 6);
-    if (p.length > 6) out += '-' + p.slice(6, 8);
-    if (p.length > 8) out += '-' + p.slice(8, 10);
+  phone.addEventListener('input', (e) => {
+    const v = phone.value;
+    let nat;
+    if (v.startsWith('+38')) nat = v.slice(3).replace(/\D/g, '');
+    else {
+      let d = v.replace(/\D/g, '');
+      if (d === '3' || d === '38' || d === '8') return; // still typing a prefix
+      if (d.startsWith('380')) d = d.slice(2);
+      else if (d.startsWith('80')) d = d.slice(1);
+      nat = d;
+    }
+    if (!nat) { phone.value = ''; return; }
+    if ((e.inputType || '').startsWith('delete')) return; // never re-add what the user erased
+    if (!nat.startsWith('0')) nat = '0' + nat;
+    nat = nat.slice(0, 10);
+    let out = '+38 (' + nat.slice(0, 3);
+    if (nat.length >= 3) out += ')';
+    if (nat.length > 3) out += ' ' + nat.slice(3, 6);
+    if (nat.length > 6) out += '-' + nat.slice(6, 8);
+    if (nat.length > 8) out += '-' + nat.slice(8, 10);
     phone.value = out;
   });
 
@@ -447,7 +465,7 @@
     e.preventDefault();
     const name = form.elements.name, agree = form.elements.agree;
     const okName = name.value.trim().length >= 2;
-    const okPhone = phone.value.replace(/\D/g, '').length === 11;
+    const okPhone = /^380\d{9}$/.test(phone.value.replace(/\D/g, ''));
     name.closest('.field').classList.toggle('is-invalid', !okName);
     phone.closest('.field').classList.toggle('is-invalid', !okPhone);
     agree.closest('.check').classList.toggle('is-invalid', !agree.checked);

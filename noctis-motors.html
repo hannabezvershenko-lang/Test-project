@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ru">
+<html lang="uk">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Noctis Motors — премиальные автомобили</title>
-  <meta name="description" content="Noctis Motors — продажа премиальных и спортивных автомобилей под ключ: подбор, проверка, доставка, гарантия и сервис.">
+  <title>Noctis Motors — преміальні автомобілі в Україні</title>
+  <meta name="description" content="Noctis Motors — продаж преміальних і спортивних автомобілів в Україні під ключ: підбір, перевірка, пригін з ЄС і США, розмитнення, гарантія та сервіс у Києві.">
   <meta name="theme-color" content="#060507">
   <style>
 /* ───────────── Fonts (bundled Inter Display from the root site) ───────────── */
@@ -382,6 +382,24 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 .model-card:hover .model-card__media::before { opacity: 1; transform: scale(1.15); }
 .model-card__media svg { position: relative; width: 86%; transition: transform .7s var(--ease); }
 .model-card:hover .model-card__media svg { transform: translateX(5%) scale(1.06); }
+/* real photo: covers the silhouette once it has loaded; dark grade + accent light keep it on-brand */
+.model-card__media img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  filter: saturate(.92) contrast(1.05) brightness(.88);
+  transition: transform .9s var(--ease), filter .6s;
+}
+.model-card__media::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent 55%, rgba(8, 7, 8, .85)),
+    radial-gradient(120% 90% at 50% 110%, color-mix(in srgb, var(--c) 30%, transparent), transparent 60%);
+  opacity: 0; transition: opacity .5s;
+}
+.model-card.has-photo .model-card__media::after { opacity: 1; }
+.model-card.has-photo .model-card__media svg { visibility: hidden; }
+.model-card:not(.has-photo) .model-card__media img { opacity: 0; } /* not display:none — lazy images would never load */
+.model-card:hover .model-card__media img { transform: scale(1.07); filter: saturate(1.05) contrast(1.08) brightness(1); }
+.models-note { margin-top: 18px; font-size: 12.5px; color: var(--ink-mute); }
 .model-card:hover .sil-rim { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .model-card__body { padding: 4px 22px 22px; }
@@ -562,41 +580,41 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 
 <!-- ═════════════ HEADER ═════════════ -->
 <header class="header" id="top">
-  <a class="logo" href="#top" aria-label="Noctis Motors — на главную">
+  <a class="logo" href="#top" aria-label="Noctis Motors — на головну">
     <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
       <path d="M6 34V6l28 28V6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
     </svg>
     <span>Noctis Motors</span>
   </a>
 
-  <nav class="nav" aria-label="Основное меню">
+  <nav class="nav" aria-label="Головне меню">
     <span class="nav__pill" aria-hidden="true"></span>
-    <a class="nav__link is-active" href="#top">Главная</a>
-    <a class="nav__link" href="#models">Модели</a>
-    <a class="nav__link" href="#tech">Технологии</a>
-    <a class="nav__link" href="#config">Комплектации</a>
-    <a class="nav__link" href="#about">О компании</a>
-    <a class="nav__link" href="#contacts">Контакты</a>
+    <a class="nav__link is-active" href="#top">Головна</a>
+    <a class="nav__link" href="#models">Моделі</a>
+    <a class="nav__link" href="#tech">Переваги</a>
+    <a class="nav__link" href="#config">Комплектації</a>
+    <a class="nav__link" href="#about">Про компанію</a>
+    <a class="nav__link" href="#contacts">Контакти</a>
   </nav>
 
-  <a class="phone-btn magnetic" href="tel:+74951283210">
+  <a class="phone-btn magnetic" href="tel:+380441283210">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-    <span>+7 (495) 128-32-10</span>
+    <span>+38 (044) 128-32-10</span>
   </a>
 
-  <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+  <button class="burger" type="button" aria-label="Відкрити меню" aria-expanded="false" aria-controls="mobileMenu">
     <span></span><span></span>
   </button>
 </header>
 
 <div class="mobile-menu" id="mobileMenu" hidden>
-  <a href="#top">Главная</a>
-  <a href="#models">Модели</a>
-  <a href="#tech">Технологии</a>
-  <a href="#config">Комплектации</a>
-  <a href="#about">О компании</a>
-  <a href="#contacts">Контакты</a>
-  <a class="mobile-menu__phone" href="tel:+74951283210">+7 (495) 128-32-10</a>
+  <a href="#top">Головна</a>
+  <a href="#models">Моделі</a>
+  <a href="#tech">Переваги</a>
+  <a href="#config">Комплектації</a>
+  <a href="#about">Про компанію</a>
+  <a href="#contacts">Контакти</a>
+  <a class="mobile-menu__phone" href="tel:+380441283210">+38 (044) 128-32-10</a>
 </div>
 
 <main>
@@ -611,24 +629,24 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 
   <div class="hero__top">
     <div class="hero__copy">
-      <p class="eyebrow reveal">Коллекция 2026 · Москва</p>
+      <p class="eyebrow reveal">Колекція 2026 · Київ</p>
       <h1 class="hero__title" id="heroTitle">
-        <span class="line"><span>Премиальные</span></span>
-        <span class="line"><span>автомобили</span></span>
-        <span class="line"><span>для тех, кто</span></span>
-        <span class="line"><span>выбирает лучшее</span></span>
+        <span class="line"><span>Преміальні</span></span>
+        <span class="line"><span>автомобілі</span></span>
+        <span class="line"><span>для тих, хто</span></span>
+        <span class="line"><span>обирає найкраще</span></span>
       </h1>
-      <p class="hero__lead reveal">Подбираем, проверяем и доставляем эксклюзивные автомобили под ключ — с юридической чистотой, прозрачной историей и персональным менеджером на каждом этапе.</p>
+      <p class="hero__lead reveal">Підбираємо, перевіряємо та доставляємо преміальні автомобілі з Європи, США та ОАЕ під ключ — з розмитненням, юридичною чистотою та персональним менеджером на кожному етапі.</p>
       <div class="hero__actions reveal">
-        <a class="btn btn--light magnetic" href="#models">Смотреть модели <i class="arr">↗</i></a>
-        <button class="btn btn--ghost magnetic" type="button" data-open-modal>Получить консультацию</button>
+        <a class="btn btn--light magnetic" href="#models">Дивитися моделі <i class="arr">↗</i></a>
+        <button class="btn btn--ghost magnetic" type="button" data-open-modal>Отримати консультацію</button>
       </div>
     </div>
 
     <ul class="stats-cards">
-      <li class="glass-card tilt reveal"><b><span data-count="320">0</span>+</b><span>автомобилей<br>продано</span></li>
-      <li class="glass-card tilt reveal"><b><span data-count="12">0</span></b><span>лет на рынке<br>премиум-авто</span></li>
-      <li class="glass-card tilt reveal"><b><span data-count="98">0</span>%</b><span>клиентов<br>возвращаются</span></li>
+      <li class="glass-card tilt reveal"><b><span data-count="320">0</span>+</b><span>автомобілів<br>продано</span></li>
+      <li class="glass-card tilt reveal"><b><span data-count="12">0</span></b><span>років на ринку<br>преміум-авто</span></li>
+      <li class="glass-card tilt reveal"><b><span data-count="98">0</span>%</b><span>клієнтів<br>повертаються</span></li>
     </ul>
   </div>
 
@@ -636,7 +654,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   <div class="car-stage" id="carStage">
     <div class="car-tilt">
       <svg class="car" viewBox="0 0 1000 660" role="img" aria-labelledby="carTitle">
-        <title id="carTitle">Noctis GT Obsidian, вид спереди. Наведите курсор — двери откроются, фары мигнут.</title>
+        <title id="carTitle">Noctis GT Obsidian, вигляд спереду. Наведіть курсор — двері відчиняться, фари блимнуть.</title>
         <defs>
           <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" class="c-body-hi"/>
@@ -810,10 +828,10 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 
       <!-- spec callouts that appear on hover -->
       <ul class="callouts" aria-label="Характеристики Noctis GT Obsidian">
-        <li class="callout c1"><b>780</b> л.с.<span>V8 4.0 битурбо</span></li>
-        <li class="callout c2"><b>2,9</b> с<span>разгон 0–100 км/ч</span></li>
-        <li class="callout c3"><b>330</b> км/ч<span>максимальная скорость</span></li>
-        <li class="callout c4"><b>1 420</b> кг<span>карбоновый монокок</span></li>
+        <li class="callout c1"><b>780</b> к.с.<span>V8 4.0 бітурбо</span></li>
+        <li class="callout c2"><b>2,9</b> с<span>розгін 0–100 км/год</span></li>
+        <li class="callout c3"><b>330</b> км/год<span>максимальна швидкість</span></li>
+        <li class="callout c4"><b>1 420</b> кг<span>карбоновий монокок</span></li>
       </ul>
     </div>
 
@@ -821,12 +839,12 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 
     <div class="car-caption">
       <p class="car-caption__name">Noctis GT <em>Obsidian</em></p>
-      <p class="car-caption__hint"><span class="dot"></span><span class="hint-text">Наведите на автомобиль</span></p>
+      <p class="car-caption__hint"><span class="dot"></span><span class="hint-text">Наведіть на автомобіль</span></p>
     </div>
   </div>
 
   <div class="partners">
-    <p>Официальный партнёр</p>
+    <p>Наші партнери</p>
     <ul>
       <li>VELARO</li><li>NORDHAUS</li><li>KAISER<sup>&amp;</sup>CO</li><li>ORION</li><li>MONTÉ</li><li>STELLAR</li>
     </ul>
@@ -836,36 +854,36 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 <!-- ═════════════ ABOUT ═════════════ -->
 <section class="about section" id="about">
   <div class="about__text">
-    <p class="eyebrow reveal">О компании</p>
-    <h2 class="h2 reveal">Автомобили, к которым хочется возвращаться</h2>
-    <p class="reveal">Noctis Motors — команда экспертов, инженеров и консьержей, объединённых идеей сделать покупку премиального автомобиля таким же удовольствием, как и вождение.</p>
-    <p class="reveal">Мы проверяем каждый автомобиль по 240 пунктам, контролируем доставку и оформление — от первого звонка до момента, когда вы получаете ключи.</p>
-    <a class="btn btn--ghost magnetic reveal" href="#contacts">Подробнее о компании <i class="arr">↗</i></a>
+    <p class="eyebrow reveal">Про компанію</p>
+    <h2 class="h2 reveal">Автомобілі, до яких хочеться повертатися</h2>
+    <p class="reveal">Noctis Motors — київська команда експертів, інженерів і консьєржів, які роблять купівлю преміального автомобіля такою ж приємною, як і саму їзду.</p>
+    <p class="reveal">Перевіряємо кожне авто за 240 пунктами, беремо на себе доставку, розмитнення та реєстрацію в сервісному центрі МВС — від першого дзвінка до моменту, коли ви отримуєте ключі.</p>
+    <a class="btn btn--ghost magnetic reveal" href="#contacts">Детальніше про компанію <i class="arr">↗</i></a>
   </div>
   <div class="about__media">
     <figure class="scene scene--wide tilt reveal">
       <div class="scene__light"></div>
       <svg class="scene__car" viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-coupe"/></svg>
       <div class="scene__floor"></div>
-      <figcaption>Шоурум на Тверской · 2 400 м²</figcaption>
+      <figcaption>Шоурум на Великій Васильківській · 2 400 м²</figcaption>
     </figure>
     <figure class="scene scene--tall tilt reveal">
       <div class="scene__light scene__light--side"></div>
       <div class="scene__slats"></div>
-      <figcaption>Сервис-центр · 18 постов</figcaption>
+      <figcaption>Сервісний центр · 18 постів</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ═════════════ ACHIEVEMENTS ═════════════ -->
 <section class="achievements section" aria-labelledby="achTitle">
-  <p class="eyebrow" id="achTitle">Наши достижения</p>
+  <p class="eyebrow" id="achTitle">Наші досягнення</p>
   <ul class="ach-list">
-    <li class="reveal"><b><span data-count="320">0</span>+</b><span>проданных<br>автомобилей</span></li>
-    <li class="reveal"><b><span data-count="12">0</span></b><span>лет опыта<br>на рынке</span></li>
-    <li class="reveal"><b><span data-count="1850">0</span>+</b><span>довольных<br>клиентов</span></li>
-    <li class="reveal"><b><span data-count="45">0</span></b><span>марок<br>в каталоге</span></li>
-    <li class="reveal"><b><span data-count="5">0</span> лет</b><span>гарантия<br>на сервис</span></li>
+    <li class="reveal"><b><span data-count="320">0</span>+</b><span>проданих<br>автомобілів</span></li>
+    <li class="reveal"><b><span data-count="12">0</span></b><span>років досвіду<br>на ринку</span></li>
+    <li class="reveal"><b><span data-count="1850">0</span>+</b><span>задоволених<br>клієнтів</span></li>
+    <li class="reveal"><b><span data-count="45">0</span></b><span>марок<br>у каталозі</span></li>
+    <li class="reveal"><b><span data-count="5">0</span> років</b><span>гарантія<br>на сервіс</span></li>
   </ul>
 </section>
 
@@ -874,99 +892,112 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   <div class="section-head">
     <div>
       <p class="eyebrow">Каталог</p>
-      <h2 class="h2" id="modelsTitle">Модели в наличии</h2>
+      <h2 class="h2" id="modelsTitle">Моделі в наявності</h2>
     </div>
-    <div class="filters" role="tablist" aria-label="Фильтр по типу кузова">
-      <button class="filter is-active" role="tab" aria-selected="true" data-filter="all">Все</button>
+    <div class="filters" role="tablist" aria-label="Фільтр за типом кузова">
+      <button class="filter is-active" role="tab" aria-selected="true" data-filter="all">Усі</button>
       <button class="filter" role="tab" aria-selected="false" data-filter="coupe">Купе</button>
-      <button class="filter" role="tab" aria-selected="false" data-filter="sedan">Седаны</button>
+      <button class="filter" role="tab" aria-selected="false" data-filter="sedan">Седани</button>
       <button class="filter" role="tab" aria-selected="false" data-filter="suv">SUV</button>
-      <button class="filter" role="tab" aria-selected="false" data-filter="ev">Электро</button>
+      <button class="filter" role="tab" aria-selected="false" data-filter="ev">Електро</button>
     </div>
   </div>
 
   <ul class="model-grid">
     <li class="model-card tilt" data-type="coupe" style="--c:#ff9a3c">
-      <div class="model-card__media"><svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-coupe"/></svg></div>
+      <div class="model-card__media">
+        <svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-coupe"/></svg>
+      </div>
       <div class="model-card__body">
-        <p class="model-card__tag">Купе · 2026</p>
-        <h3>Noctis GT Obsidian</h3>
-        <ul class="specs"><li>780 л.с.</li><li>2,9 с</li><li>AWD</li></ul>
-        <div class="model-card__foot"><span class="price">от 28 900 000 ₽</span><button class="round-btn" type="button" data-open-modal data-model="Noctis GT Obsidian" aria-label="Запросить Noctis GT Obsidian">↗</button></div>
+        <p class="model-card__tag">Купе · 2025</p>
+        <h3>Porsche 911 Turbo S</h3>
+        <ul class="specs"><li>650 к.с.</li><li>2,7 с</li><li>AWD</li></ul>
+        <div class="model-card__foot"><span class="price">від $265 000</span><button class="round-btn" type="button" data-open-modal data-model="Porsche 911 Turbo S" aria-label="Запит на Porsche 911 Turbo S">↗</button></div>
       </div>
     </li>
-    <li class="model-card tilt" data-type="sedan" style="--c:#9cc3ff">
-      <div class="model-card__media"><svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-sedan"/></svg></div>
+    <li class="model-card tilt" data-type="coupe" style="--c:#ff5a4a">
+      <div class="model-card__media">
+        <svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-coupe"/></svg>
+      </div>
       <div class="model-card__body">
-        <p class="model-card__tag">Седан · 2026</p>
-        <h3>Velaro S Executive</h3>
-        <ul class="specs"><li>612 л.с.</li><li>3,6 с</li><li>Long</li></ul>
-        <div class="model-card__foot"><span class="price">от 19 450 000 ₽</span><button class="round-btn" type="button" data-open-modal data-model="Velaro S Executive" aria-label="Запросить Velaro S Executive">↗</button></div>
+        <p class="model-card__tag">Купе · 2025</p>
+        <h3>Ferrari 296 GTB</h3>
+        <ul class="specs"><li>830 к.с.</li><li>2,9 с</li><li>Гібрид</li></ul>
+        <div class="model-card__foot"><span class="price">від $340 000</span><button class="round-btn" type="button" data-open-modal data-model="Ferrari 296 GTB" aria-label="Запит на Ferrari 296 GTB">↗</button></div>
       </div>
     </li>
-    <li class="model-card tilt" data-type="suv" style="--c:#d6b07a">
-      <div class="model-card__media"><svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-suv"/></svg></div>
+    <li class="model-card tilt" data-type="sedan" style="--c:#d6b07a">
+      <div class="model-card__media">
+        <svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-sedan"/></svg>
+      </div>
+      <div class="model-card__body">
+        <p class="model-card__tag">Седан · 2025</p>
+        <h3>Mercedes-Maybach S 680</h3>
+        <ul class="specs"><li>612 к.с.</li><li>V12</li><li>4,5 с</li></ul>
+        <div class="model-card__foot"><span class="price">від $260 000</span><button class="round-btn" type="button" data-open-modal data-model="Mercedes-Maybach S 680" aria-label="Запит на Mercedes-Maybach S 680">↗</button></div>
+      </div>
+    </li>
+    <li class="model-card tilt" data-type="suv" style="--c:#9cc3ff">
+      <div class="model-card__media">
+        <svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-suv"/></svg>
+      </div>
       <div class="model-card__body">
         <p class="model-card__tag">SUV · 2025</p>
-        <h3>Nordhaus X7 Black</h3>
-        <ul class="specs"><li>650 л.с.</li><li>3,8 с</li><li>7 мест</li></ul>
-        <div class="model-card__foot"><span class="price">от 21 700 000 ₽</span><button class="round-btn" type="button" data-open-modal data-model="Nordhaus X7 Black" aria-label="Запросить Nordhaus X7 Black">↗</button></div>
+        <h3>Range Rover SV</h3>
+        <ul class="specs"><li>615 к.с.</li><li>V8</li><li>4,5 с</li></ul>
+        <div class="model-card__foot"><span class="price">від $235 000</span><button class="round-btn" type="button" data-open-modal data-model="Range Rover SV" aria-label="Запит на Range Rover SV">↗</button></div>
       </div>
     </li>
-    <li class="model-card tilt" data-type="ev coupe" style="--c:#7cf0d0">
-      <div class="model-card__media"><svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-coupe"/></svg></div>
+    <li class="model-card tilt" data-type="suv" style="--c:#ffd34a">
+      <div class="model-card__media">
+        <svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-suv"/></svg>
+      </div>
       <div class="model-card__body">
-        <p class="model-card__tag">Электро · 2026</p>
-        <h3>Orion E-Volt</h3>
-        <ul class="specs"><li>1 020 л.с.</li><li>2,1 с</li><li>620 км</li></ul>
-        <div class="model-card__foot"><span class="price">от 24 300 000 ₽</span><button class="round-btn" type="button" data-open-modal data-model="Orion E-Volt" aria-label="Запросить Orion E-Volt">↗</button></div>
+        <p class="model-card__tag">SUV · 2025</p>
+        <h3>Lamborghini Urus SE</h3>
+        <ul class="specs"><li>800 к.с.</li><li>3,4 с</li><li>PHEV</li></ul>
+        <div class="model-card__foot"><span class="price">від $290 000</span><button class="round-btn" type="button" data-open-modal data-model="Lamborghini Urus SE" aria-label="Запит на Lamborghini Urus SE">↗</button></div>
       </div>
     </li>
-    <li class="model-card tilt" data-type="ev sedan" style="--c:#c9a6ff">
-      <div class="model-card__media"><svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-sedan"/></svg></div>
-      <div class="model-card__body">
-        <p class="model-card__tag">Электро · 2026</p>
-        <h3>Stellar Lumen GT</h3>
-        <ul class="specs"><li>760 л.с.</li><li>2,8 с</li><li>580 км</li></ul>
-        <div class="model-card__foot"><span class="price">от 16 900 000 ₽</span><button class="round-btn" type="button" data-open-modal data-model="Stellar Lumen GT" aria-label="Запросить Stellar Lumen GT">↗</button></div>
+    <li class="model-card tilt" data-type="ev sedan" style="--c:#7cf0d0">
+      <div class="model-card__media">
+        <svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-sedan"/></svg>
       </div>
-    </li>
-    <li class="model-card tilt" data-type="suv" style="--c:#ff6b5a">
-      <div class="model-card__media"><svg viewBox="0 0 400 140" aria-hidden="true"><use href="#sil-suv"/></svg></div>
       <div class="model-card__body">
-        <p class="model-card__tag">SUV · 2026</p>
-        <h3>Kaiser Monté Rosso</h3>
-        <ul class="specs"><li>710 л.с.</li><li>3,4 с</li><li>V12</li></ul>
-        <div class="model-card__foot"><span class="price">от 33 500 000 ₽</span><button class="round-btn" type="button" data-open-modal data-model="Kaiser Monté Rosso" aria-label="Запросить Kaiser Monté Rosso">↗</button></div>
+        <p class="model-card__tag">Електро · 2025</p>
+        <h3>Porsche Taycan Turbo S</h3>
+        <ul class="specs"><li>952 к.с.</li><li>2,4 с</li><li>630 км</li></ul>
+        <div class="model-card__foot"><span class="price">від $205 000</span><button class="round-btn" type="button" data-open-modal data-model="Porsche Taycan Turbo S" aria-label="Запит на Porsche Taycan Turbo S">↗</button></div>
       </div>
     </li>
   </ul>
-  <p class="empty-note" hidden>В этой категории пока нет автомобилей — оставьте заявку, и мы подберём под заказ.</p>
+  <p class="empty-note" hidden>У цій категорії поки немає авто в наявності — залиште заявку, і ми привеземо під замовлення.</p>
+  <p class="models-note">Ціни орієнтовні, з урахуванням розмитнення та доставки до Києва. Точну вартість менеджер розрахує за курсом НБУ на день оплати.</p>
 </section>
 
 <!-- ═════════════ TECH / ADVANTAGES ═════════════ -->
 <section class="tech section" id="tech" aria-labelledby="techTitle">
-  <p class="eyebrow" id="techTitle">Почему выбирают Noctis</p>
+  <p class="eyebrow" id="techTitle">Чому обирають Noctis</p>
   <ul class="adv-list">
     <li class="adv reveal">
       <span class="adv__icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6z M9 12l2 2 4-4"/></svg></span>
-      <h3>Проверка 240 пунктов</h3>
-      <p>Диагностика, толщиномер, история обслуживания и юридическая чистота каждого автомобиля.</p>
+      <h3>Перевірка за 240 пунктами</h3>
+      <p>Діагностика, товщиномір, перевірка VIN за базами ЄС і США, історія обслуговування та юридична чистота.</p>
     </li>
     <li class="adv reveal">
       <span class="adv__icon"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3z M14 10h4l3 3v3h-7 M7 19a2 2 0 1 0 0-.01 M17 19a2 2 0 1 0 0-.01"/></svg></span>
-      <h3>Доставка за 21 день</h3>
-      <p>Привозим автомобили из Европы, ОАЭ и Азии в закрытом автовозе с полной страховкой.</p>
+      <h3>Пригін і розмитнення</h3>
+      <p>Доставляємо з ЄС від 14 днів, із США та ОАЕ — від 45. Закритий автовоз, повне страхування, розмитнення під ключ.</p>
     </li>
     <li class="adv reveal">
       <span class="adv__icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg></span>
-      <h3>Собственный сервис</h3>
-      <p>Сертифицированные мастера, оригинальные запчасти и подменный автомобиль на время ТО.</p>
+      <h3>Власний сервіс</h3>
+      <p>Сертифіковані майстри, оригінальні запчастини та підмінний автомобіль на час ТО.</p>
     </li>
     <li class="adv reveal">
       <span class="adv__icon"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
-      <h3>Персональный менеджер</h3>
-      <p>Один человек ведёт сделку от подбора до постановки на учёт и остаётся на связи 24/7.</p>
+      <h3>Лізинг і кредит</h3>
+      <p>Фінансування від банків-партнерів, оплата в гривні або валюті, trade-in вашого авто за ринковою ціною.</p>
     </li>
   </ul>
 </section>
@@ -979,41 +1010,41 @@ h1, h2, h3, h4, p, figure { margin: 0; }
     <div class="config__floor"></div>
   </div>
   <div class="config__panel">
-    <p class="eyebrow">Комплектации</p>
-    <h2 class="h2" id="configTitle">Соберите свой GT</h2>
+    <p class="eyebrow">Комплектації</p>
+    <h2 class="h2" id="configTitle">Зберіть свій GT</h2>
 
     <fieldset class="opt-group">
-      <legend>Цвет кузова: <span class="opt-value" id="colorName">Obsidian Black</span></legend>
+      <legend>Колір кузова: <span class="opt-value" id="colorName">Obsidian Black</span></legend>
       <div class="swatches">
         <button type="button" class="swatch is-active" data-color="obsidian" data-name="Obsidian Black" data-price="0" style="--s:#16161a" aria-label="Obsidian Black"></button>
-        <button type="button" class="swatch" data-color="ember" data-name="Ember Orange" data-price="420000" style="--s:#c4521c" aria-label="Ember Orange"></button>
-        <button type="button" class="swatch" data-color="graphite" data-name="Liquid Graphite" data-price="380000" style="--s:#5a5e66" aria-label="Liquid Graphite"></button>
-        <button type="button" class="swatch" data-color="bordeaux" data-name="Rosso Bordeaux" data-price="460000" style="--s:#5e0f18" aria-label="Rosso Bordeaux"></button>
-        <button type="button" class="swatch" data-color="pearl" data-name="Pearl White" data-price="510000" style="--s:#d9d6d0" aria-label="Pearl White"></button>
+        <button type="button" class="swatch" data-color="ember" data-name="Ember Orange" data-price="6500" style="--s:#c4521c" aria-label="Ember Orange"></button>
+        <button type="button" class="swatch" data-color="graphite" data-name="Liquid Graphite" data-price="5800" style="--s:#5a5e66" aria-label="Liquid Graphite"></button>
+        <button type="button" class="swatch" data-color="bordeaux" data-name="Rosso Bordeaux" data-price="7200" style="--s:#5e0f18" aria-label="Rosso Bordeaux"></button>
+        <button type="button" class="swatch" data-color="pearl" data-name="Pearl White" data-price="8400" style="--s:#d9d6d0" aria-label="Pearl White"></button>
       </div>
     </fieldset>
 
     <fieldset class="opt-group">
       <legend>Пакет</legend>
       <div class="pkgs">
-        <label class="pkg"><input type="radio" name="pkg" value="0" checked><span><b>Signature</b><small>Базовая комплектация</small></span></label>
-        <label class="pkg"><input type="radio" name="pkg" value="1900000"><span><b>Performance</b><small>Карбон, керамика, +40 л.с.</small></span></label>
-        <label class="pkg"><input type="radio" name="pkg" value="3400000"><span><b>Atelier</b><small>Индивидуальный салон</small></span></label>
+        <label class="pkg"><input type="radio" name="pkg" value="0" checked><span><b>Signature</b><small>Базова комплектація</small></span></label>
+        <label class="pkg"><input type="radio" name="pkg" value="28000"><span><b>Performance</b><small>Карбон, кераміка, +40 к.с.</small></span></label>
+        <label class="pkg"><input type="radio" name="pkg" value="52000"><span><b>Atelier</b><small>Індивідуальний салон</small></span></label>
       </div>
     </fieldset>
 
     <fieldset class="opt-group">
-      <legend>Опции</legend>
+      <legend>Опції</legend>
       <div class="toggles">
-        <label class="toggle"><input type="checkbox" value="290000"><span>Аудиосистема Burmester-класса</span></label>
-        <label class="toggle"><input type="checkbox" value="350000"><span>Ночное видение</span></label>
-        <label class="toggle"><input type="checkbox" value="180000"><span>Звёздное небо в салоне</span></label>
+        <label class="toggle"><input type="checkbox" value="4500"><span>Преміальна аудіосистема</span></label>
+        <label class="toggle"><input type="checkbox" value="5200"><span>Нічне бачення</span></label>
+        <label class="toggle"><input type="checkbox" value="2800"><span>Зоряне небо в салоні</span></label>
       </div>
     </fieldset>
 
     <div class="config__total">
-      <div><span>Итого</span><b id="totalPrice">28 900 000 ₽</b></div>
-      <button class="btn btn--light magnetic" type="button" data-open-modal data-model="Noctis GT (конфигурация)">Забронировать <i class="arr">↗</i></button>
+      <div><span>Разом</span><b id="totalPrice">$395 000</b></div>
+      <button class="btn btn--light magnetic" type="button" data-open-modal data-model="Noctis GT (конфігурація)">Забронювати <i class="arr">↗</i></button>
     </div>
   </div>
 </section>
@@ -1023,13 +1054,13 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   <div class="cta__box reveal">
     <div class="cta__bg" aria-hidden="true"></div>
     <div class="cta__text">
-      <p class="eyebrow">Готовы к тест-драйву?</p>
-      <h2 class="h2" id="ctaTitle">Подберём автомобиль вашей мечты вместе с Noctis</h2>
-      <p>Оставьте заявку — персональный менеджер свяжется с вами в течение 15 минут.</p>
+      <p class="eyebrow">Готові до тест-драйву?</p>
+      <h2 class="h2" id="ctaTitle">Підберемо автомобіль вашої мрії разом із Noctis</h2>
+      <p>Залиште заявку — персональний менеджер зв’яжеться з вами протягом 15 хвилин.</p>
     </div>
     <div class="cta__actions">
-      <button class="btn btn--light magnetic" type="button" data-open-modal>Получить консультацию <i class="arr">↗</i></button>
-      <a class="btn btn--ghost magnetic" href="#models">Смотреть модели</a>
+      <button class="btn btn--light magnetic" type="button" data-open-modal>Отримати консультацію <i class="arr">↗</i></button>
+      <a class="btn btn--ghost magnetic" href="#models">Дивитися моделі</a>
     </div>
   </div>
 </section>
@@ -1042,36 +1073,36 @@ h1, h2, h3, h4, p, figure { margin: 0; }
       <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34V6l28 28V6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
       <span>Noctis Motors</span>
     </a>
-    <p>Продажа и обслуживание премиальных автомобилей под ключ.</p>
+    <p>Продаж і обслуговування преміальних автомобілів в Україні під ключ.</p>
     <ul class="socials">
       <li><a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z M9 13l8-6"/></svg></a></li>
       <li><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/></svg></a></li>
-      <li><a href="#" aria-label="VK"><svg viewBox="0 0 24 24"><path d="M3 7c.5 6 4 10 9 10h1v-3c2 0 3 2 4 3h3c-1-2-3-4-4-4 1-1 3-3 3-6h-3c0 2-2 4-3 4V7h-3v7c-2-1-4-3-4-7z"/></svg></a></li>
+      <li><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg></a></li>
       <li><a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/></svg></a></li>
     </ul>
   </div>
   <div class="footer__col">
     <h4>Меню</h4>
-    <a href="#top">Главная</a><a href="#models">Модели</a><a href="#tech">Технологии</a><a href="#config">Комплектации</a><a href="#about">О компании</a>
+    <a href="#top">Головна</a><a href="#models">Моделі</a><a href="#tech">Переваги</a><a href="#config">Комплектації</a><a href="#about">Про компанію</a>
   </div>
   <div class="footer__col">
     <h4>Модели</h4>
-    <a href="#models">Купе</a><a href="#models">Седаны</a><a href="#models">Внедорожники</a><a href="#models">Электромобили</a><a href="#models">Под заказ</a>
+    <a href="#models">Купе</a><a href="#models">Седани</a><a href="#models">Позашляховики</a><a href="#models">Електромобілі</a><a href="#models">Під замовлення</a>
   </div>
   <div class="footer__col">
-    <h4>Компания</h4>
-    <a href="#about">О нас</a><a href="#tech">Сервис</a><a href="#tech">Гарантии</a><a href="#about">Отзывы</a><a href="#about">Блог</a>
+    <h4>Компанія</h4>
+    <a href="#about">Про нас</a><a href="#tech">Сервіс</a><a href="#tech">Гарантії</a><a href="#about">Відгуки</a><a href="#about">Блог</a>
   </div>
   <div class="footer__col footer__contacts">
-    <h4>Контакты</h4>
-    <a href="tel:+74951283210">+7 (495) 128-32-10</a>
+    <h4>Контакти</h4>
+    <a href="tel:+380441283210">+38 (044) 128-32-10</a>
     <a href="mailto:hello@noctis-motors.example">hello@noctis-motors.example</a>
-    <span>Москва, ул. Тверская, 16</span>
-    <span>Ежедневно 10:00–21:00</span>
+    <span>Київ, вул. Велика Васильківська, 72</span>
+    <span>Щодня 10:00–20:00</span>
   </div>
   <div class="footer__bottom">
-    <span>© 2026 Noctis Motors. Все права защищены.</span>
-    <span><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></span>
+    <span>© 2026 Noctis Motors. Усі права захищено.</span>
+    <span><a href="#">Політика конфіденційності</a><a href="#">Публічна оферта</a></span>
   </div>
 </footer>
 
@@ -1079,21 +1110,21 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
   <div class="modal__backdrop" data-close-modal></div>
   <div class="modal__box">
-    <button class="modal__close" type="button" data-close-modal aria-label="Закрыть">×</button>
+    <button class="modal__close" type="button" data-close-modal aria-label="Закрити">×</button>
     <form class="form" novalidate>
       <p class="eyebrow">Заявка</p>
-      <h3 id="modalTitle">Получить консультацию</h3>
+      <h3 id="modalTitle">Отримати консультацію</h3>
       <p class="form__model" hidden>Модель: <b></b></p>
-      <label class="field"><span>Имя</span><input name="name" type="text" autocomplete="name" required minlength="2" placeholder="Как к вам обращаться"><small class="field__err">Введите имя</small></label>
-      <label class="field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" required placeholder="+7 (___) ___-__-__"><small class="field__err">Введите телефон полностью</small></label>
-      <label class="check"><input type="checkbox" name="agree" required><span>Согласен на обработку персональных данных</span></label>
-      <button class="btn btn--light" type="submit">Отправить заявку <i class="arr">↗</i></button>
+      <label class="field"><span>Ім’я</span><input name="name" type="text" autocomplete="name" required minlength="2" placeholder="Як до вас звертатися"><small class="field__err">Введіть ім’я</small></label>
+      <label class="field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" required placeholder="+38 (0__) ___-__-__"><small class="field__err">Введіть номер телефону повністю</small></label>
+      <label class="check"><input type="checkbox" name="agree" required><span>Погоджуюсь на обробку персональних даних</span></label>
+      <button class="btn btn--light" type="submit">Надіслати заявку <i class="arr">↗</i></button>
     </form>
     <div class="form-success" hidden>
-      <p class="eyebrow">Спасибо</p>
-      <h3>Заявка принята</h3>
-      <p>Менеджер свяжется с вами в течение 15 минут.</p>
-      <button class="btn btn--ghost" type="button" data-close-modal>Закрыть</button>
+      <p class="eyebrow">Дякуємо</p>
+      <h3>Заявку прийнято</h3>
+      <p>Менеджер зв’яжеться з вами протягом 15 хвилин.</p>
+      <button class="btn btn--ghost" type="button" data-close-modal>Закрити</button>
     </div>
   </div>
 </div>
@@ -1185,7 +1216,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   const mobileMenu = $('#mobileMenu');
   const setMenu = (open) => {
     burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    burger.setAttribute('aria-label', open ? 'Закрити меню' : 'Відкрити меню');
     mobileMenu.hidden = !open;
     document.body.style.overflow = open ? 'hidden' : '';
   };
@@ -1252,7 +1283,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   const carTilt = $('.car-tilt', stage);
   const carShape = $('.car', stage);
   const hintText = $('.hint-text', stage);
-  if (!canHover) hintText.textContent = 'Нажмите на автомобиль';
+  if (!canHover) hintText.textContent = 'Торкніться автомобіля';
 
   const setOpen = (open) => stage.classList.toggle('is-open', open);
   // Open only when the pointer is over the car itself, not the empty stage around it
@@ -1281,7 +1312,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   }
   stage.setAttribute('tabindex', '0');
   stage.setAttribute('role', 'button');
-  stage.setAttribute('aria-label', 'Noctis GT Obsidian: открыть двери и включить фары');
+  stage.setAttribute('aria-label', 'Noctis GT Obsidian: відчинити двері та ввімкнути фари');
   stage.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!stage.classList.contains('is-open')); }
   });
@@ -1440,7 +1471,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   $$('.reveal').forEach((el) => revealIO.observe(el));
 
   /* ───────────── Count-up numbers ───────────── */
-  const fmt = (n) => n.toLocaleString('ru-RU');
+  const fmt = (n) => n.toLocaleString('uk-UA');
   const countIO = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -1458,6 +1489,16 @@ h1, h2, h3, h4, p, figure { margin: 0; }
     });
   }, { threshold: 0.4 });
   $$('[data-count]').forEach((el) => countIO.observe(el));
+
+  /* ───────────── Catalog photos ───────────── */
+  $$('.model-card__media img').forEach((img) => {
+    const card = img.closest('.model-card');
+    const ok = () => card.classList.toggle('has-photo', img.naturalWidth > 0);
+    // lazy images can report complete before they load, so always listen as well
+    img.addEventListener('load', ok);
+    img.addEventListener('error', ok);
+    if (img.complete) ok();
+  });
 
   /* ───────────── Model filters ───────────── */
   const cards = $$('.model-card');
@@ -1478,7 +1519,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   }));
 
   /* ───────────── Configurator ───────────── */
-  const BASE = 28900000;
+  const BASE = 395000;
   const paints = {
     obsidian: { hi: '#3b3b42', mid: '#121216', lo: '#050506', paint: '#16161a', accent: '#ff9a3c' },
     ember:    { hi: '#e0752f', mid: '#7a2a0c', lo: '#1e0904', paint: '#c4521c', accent: '#ffc27a' },
@@ -1491,7 +1532,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
   const configVisual = $('.config__visual');
   let colorPrice = 0;
   let shownTotal = BASE;
-  const rub = (n) => fmt(Math.round(n)) + ' ₽';
+  const usd = (n) => '$' + fmt(Math.round(n));
 
   const recalc = () => {
     const pkg = +($('input[name="pkg"]:checked') || { value: 0 }).value;
@@ -1499,10 +1540,10 @@ h1, h2, h3, h4, p, figure { margin: 0; }
     const target = BASE + colorPrice + pkg + opts;
     const from = shownTotal, t0 = performance.now();
     shownTotal = target;
-    if (reduceMotion) { totalEl.textContent = rub(target); return; }
+    if (reduceMotion) { totalEl.textContent = usd(target); return; }
     const step = (t) => {
       const k = Math.min(1, (t - t0) / 600);
-      totalEl.textContent = rub(from + (target - from) * (1 - Math.pow(1 - k, 3)));
+      totalEl.textContent = usd(from + (target - from) * (1 - Math.pow(1 - k, 3)));
       if (k < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -1562,20 +1603,28 @@ h1, h2, h3, h4, p, figure { margin: 0; }
     }
   });
 
-  // phone mask: +7 (XXX) XXX-XX-XX
+  // phone mask: +38 (0XX) XXX-XX-XX — accepts 067…, 67…, 380…, +380…, 8067…
   const phone = $('input[name="phone"]', form);
-  phone.addEventListener('input', () => {
-    let d = phone.value.replace(/\D/g, '');
-    if (d.startsWith('8')) d = '7' + d.slice(1);
-    if (d && !d.startsWith('7')) d = '7' + d;
-    d = d.slice(0, 11);
-    const p = d.slice(1);
-    let out = d ? '+7' : '';
-    if (p.length) out += ' (' + p.slice(0, 3);
-    if (p.length >= 3) out += ')';
-    if (p.length > 3) out += ' ' + p.slice(3, 6);
-    if (p.length > 6) out += '-' + p.slice(6, 8);
-    if (p.length > 8) out += '-' + p.slice(8, 10);
+  phone.addEventListener('input', (e) => {
+    const v = phone.value;
+    let nat;
+    if (v.startsWith('+38')) nat = v.slice(3).replace(/\D/g, '');
+    else {
+      let d = v.replace(/\D/g, '');
+      if (d === '3' || d === '38' || d === '8') return; // still typing a prefix
+      if (d.startsWith('380')) d = d.slice(2);
+      else if (d.startsWith('80')) d = d.slice(1);
+      nat = d;
+    }
+    if (!nat) { phone.value = ''; return; }
+    if ((e.inputType || '').startsWith('delete')) return; // never re-add what the user erased
+    if (!nat.startsWith('0')) nat = '0' + nat;
+    nat = nat.slice(0, 10);
+    let out = '+38 (' + nat.slice(0, 3);
+    if (nat.length >= 3) out += ')';
+    if (nat.length > 3) out += ' ' + nat.slice(3, 6);
+    if (nat.length > 6) out += '-' + nat.slice(6, 8);
+    if (nat.length > 8) out += '-' + nat.slice(8, 10);
     phone.value = out;
   });
 
@@ -1583,7 +1632,7 @@ h1, h2, h3, h4, p, figure { margin: 0; }
     e.preventDefault();
     const name = form.elements.name, agree = form.elements.agree;
     const okName = name.value.trim().length >= 2;
-    const okPhone = phone.value.replace(/\D/g, '').length === 11;
+    const okPhone = /^380\d{9}$/.test(phone.value.replace(/\D/g, ''));
     name.closest('.field').classList.toggle('is-invalid', !okName);
     phone.closest('.field').classList.toggle('is-invalid', !okPhone);
     agree.closest('.check').classList.toggle('is-invalid', !agree.checked);

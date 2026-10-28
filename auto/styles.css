@@ -373,6 +373,24 @@ h1, h2, h3, h4, p, figure { margin: 0; }
 .model-card:hover .model-card__media::before { opacity: 1; transform: scale(1.15); }
 .model-card__media svg { position: relative; width: 86%; transition: transform .7s var(--ease); }
 .model-card:hover .model-card__media svg { transform: translateX(5%) scale(1.06); }
+/* real photo: covers the silhouette once it has loaded; dark grade + accent light keep it on-brand */
+.model-card__media img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  filter: saturate(.92) contrast(1.05) brightness(.88);
+  transition: transform .9s var(--ease), filter .6s;
+}
+.model-card__media::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent 55%, rgba(8, 7, 8, .85)),
+    radial-gradient(120% 90% at 50% 110%, color-mix(in srgb, var(--c) 30%, transparent), transparent 60%);
+  opacity: 0; transition: opacity .5s;
+}
+.model-card.has-photo .model-card__media::after { opacity: 1; }
+.model-card.has-photo .model-card__media svg { visibility: hidden; }
+.model-card:not(.has-photo) .model-card__media img { opacity: 0; } /* not display:none — lazy images would never load */
+.model-card:hover .model-card__media img { transform: scale(1.07); filter: saturate(1.05) contrast(1.08) brightness(1); }
+.models-note { margin-top: 18px; font-size: 12.5px; color: var(--ink-mute); }
 .model-card:hover .sil-rim { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .model-card__body { padding: 4px 22px 22px; }
