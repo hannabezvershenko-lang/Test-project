@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const FRAME_COUNT = 24;
+  const FRAME_COUNT = 36;
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -88,7 +88,7 @@
     product.addEventListener("pointerenter", () => setOpen(true));
     product.addEventListener("pointerleave", () => setOpen(false));
   } else {
-    product.querySelector(".product__hint span").textContent = "Нажми — раскроется";
+    product.querySelector(".product__hint span").textContent = "Нажми — ингредиенты вылетят";
     product.addEventListener("click", () => setOpen(target === 0));
   }
   product.addEventListener("keydown", (e) => {
