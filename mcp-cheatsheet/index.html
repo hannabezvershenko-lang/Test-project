@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Шпаргалка MCP</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: шапка с фильтрами, под ней сетка карточек. В каждой карточке коннектор и 3 промпта с кнопкой копирования. */
+:root {
+  --bg: #F2F4F7;
+  --surface: #FFFFFF;
+  --surface-2: #EBEEF3;
+  --fg: #151A24;
+  --muted: #5B6578;
+  --line: #D9DEE7;
+  --accent: #2B4BFF;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E4E9FF;
+  --ok: #167A4A;
+  --ok-soft: #DDF3E7;
+  --off: #8A5A00;
+  --off-soft: #FBEBC8;
+  --ph: #B3410F;
+  --font-head: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F131B; --surface: #171C27; --surface-2: #1F2533; --fg: #E8ECF4; --muted: #98A2B8;
+    --line: #2B3345; --accent: #7C93FF; --accent-fg: #0B0F1A; --accent-soft: #232C57;
+    --ok: #5FD39A; --ok-soft: #173A2A; --off: #F2C46B; --off-soft: #3D3016; --ph: #FF9A6B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F131B; --surface: #171C27; --surface-2: #1F2533; --fg: #E8ECF4; --muted: #98A2B8;
+  --line: #2B3345; --accent: #7C93FF; --accent-fg: #0B0F1A; --accent-soft: #232C57;
+  --ok: #5FD39A; --ok-soft: #173A2A; --off: #F2C46B; --off-soft: #3D3016; --ph: #FF9A6B;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body);
+  font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 56px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 14px; max-width: 70ch; }
+h1 { font-family: var(--font-head); font-weight: 700; font-size: clamp(1.9rem, 4.5vw, 2.8rem); line-height: 1.08; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+.hint { font-size: 0.88rem; }
+.ph-sample { color: var(--ph); font-weight: 500; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit; font-size: 0.88rem; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  padding: 7px 14px; border-radius: 999px;
+}
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.chip:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 18px; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card-head { display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.card h2 { font-family: var(--font-head); font-size: 1.35rem; margin: 0; letter-spacing: -0.01em; }
+.pill { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.on { background: var(--ok-soft); color: var(--ok); }
+.pill.off { background: var(--off-soft); color: var(--off); }
+.card-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.how { font-size: 0.82rem; color: var(--muted); }
+.prompts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.prompt { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.prompt-title { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.prompt-text { margin: 0; overflow-wrap: anywhere; }
+.ph { color: var(--ph); font-weight: 500; }
+.why { margin: 0; font-size: 0.84rem; color: var(--muted); }
+.row { display: flex; justify-content: flex-end; }
+.copy { font: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); padding: 5px 12px; border-radius: 8px; }
+.copy:hover { background: var(--accent); color: var(--accent-fg); }
+.section-label { font-family: var(--font-head); font-size: 1.1rem; margin: 0; }
+footer { color: var(--muted); font-size: 0.85rem; max-width: 70ch; }
+@media (prefers-reduced-motion: no-preference) { .chip, .copy { transition: background 0.15s, color 0.15s, border-color 0.15s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>Шпаргалка по MCP-коннекторам</h1>
+    <p>У каждого коннектора три готовых промпта: что просить и чем это полезно. Нажми «Копировать», вставь в чат и замени слова в квадратных скобках на свои.</p>
+    <p class="hint">Заменяемые части выделены так: <span class="ph-sample">[твоя тема]</span></p>
+  </header>
+
+  <div class="filters" id="filters" role="group" aria-label="Фильтр по группам"></div>
+  <div class="grid" id="grid"></div>
+
+  <footer>Подключены: Spline, Wonder, Moda, vidIQ, Supermetrics. Higgsfield работает через скиллы и командную строку, а не через MCP. Figma, Canva и TinyFish пока не подключены, их промпты написаны наперёд.</footer>
+</div>
+
+<script>
+var DATA = [
+  { name: "Spline", group: "Дизайн и 3D", on: true, how: "MCP подключён",
+    desc: "3D-сцены и 2D-экраны в редакторе Hana.",
+    prompts: [
+      { t: "3D-сцена для сайта", p: "Создай в Spline 3D-сцену: стеклянный логотип [название бренда] на пьедестале, мягкий студийный свет, камера плавно облетает. Подготовь её для вставки на сайт.", w: "Готовый 3D-герой для лендинга без знания 3D-софта." },
+      { t: "Интерактивная кнопка", p: "Сделай в Spline объёмную кнопку «[текст кнопки]»: при наведении она подсвечивается, при нажатии продавливается. Объясни, как встроить её на страницу.", w: "Живой элемент, который выделяет сайт среди плоских." },
+      { t: "Экран приложения в Hana", p: "В Hana собери мобильный экран онбординга из трёх шагов для приложения [описание приложения]. Стиль: [стиль], с понятными состояниями кнопок.", w: "Быстрый макет экрана, который можно показать команде или инвестору." }
+    ] },
+  { name: "Higgsfield", group: "Контент", on: true, how: "Скиллы и CLI, не MCP",
+    desc: "Фото, видео, бренд-киты, обложки и сайты с генерацией.",
+    prompts: [
+      { t: "Рекламное видео", p: "Сделай вертикальное видео на 15 секунд: [продукт] медленно вращается на тёмном фоне, кинематографичный свет, в конце появляется слоган «[слоган]».", w: "Ролик для Reels и Shorts без съёмочной группы." },
+      { t: "Мой цифровой двойник", p: "Обучи мой Soul ID по этим фото. Потом сгенерируй четыре портрета: деловой, уличный, кинематографичный и как обложка журнала.", w: "Одно лицо во всех картинках и видео, без потери узнаваемости." },
+      { t: "Обложка для YouTube", p: "Сделай обложку для видео «[заголовок видео]»: моё лицо, крупный короткий текст, яркий контраст. Нужно три варианта.", w: "Обложка влияет на клики сильнее самого видео, а тут три версии для теста." }
+    ] },
+  { name: "Wonder", group: "Дизайн и 3D", on: true, how: "MCP подключён",
+    desc: "Холст, где каждый дизайн это настоящий код.",
+    prompts: [
+      { t: "Лендинг с нуля", p: "Спроектируй в Wonder лендинг для [продукт]: заголовок с призывом, три преимущества, отзывы, цены и футер. Сначала предложи дизайн-токены: цвета, шрифты, отступы.", w: "Макет, из которого сразу можно взять код." },
+      { t: "Тёмная тема без риска", p: "Возьми артборд [название артборда], сделай его копию и перестрой копию в тёмную тему. Оригинал не меняй.", w: "Экспериментируешь, а исходный дизайн остаётся целым." },
+      { t: "Кликабельный прототип", p: "Собери в Wonder прототип онбординга из четырёх экранов с переходами между ними и покажи, как он работает.", w: "Прототип можно проверить на людях до разработки." }
+    ] },
+  { name: "Moda", group: "Дизайн и 3D", on: true, how: "MCP подключён",
+    desc: "Редактируемые презентации, реклама, motion и соцсети.",
+    prompts: [
+      { t: "Питч-презентация", p: "Сделай в Moda презентацию на 10 слайдов для питча проекта [проект]: проблема, решение, рынок, продукт, модель дохода, команда, запрос. Применяй мой бренд-кит.", w: "Готовая редактируемая презентация вместо пустых слайдов." },
+      { t: "Креативы для Meta", p: "Сделай три рекламных креатива для Meta в формате 1080×1350 для [продукт], с разными офферами: [оффер 1], [оффер 2], [оффер 3]. Предложи схему A/B-теста.", w: "Сразу набор вариантов для проверки, а не один макет." },
+      { t: "Анимированный баннер", p: "Сделай короткий motion-баннер из моего логотипа и слогана «[слоган]», 3 секунды, зацикленный. Экспортируй в mp4 и gif.", w: "Живая заставка для сайта, сторис и email." }
+    ] },
+  { name: "vidIQ", group: "Контент", on: true, how: "MCP подключён",
+    desc: "Исследование YouTube, Instagram и TikTok.",
+    prompts: [
+      { t: "Что взлетает в нише", p: "Найди 10 видео-выбросов в нише [ниша] за последние три месяца. Объясни, что общего у их заголовков и обложек.", w: "Видишь, что работает, до того как снимаешь своё." },
+      { t: "Заголовок под ключевики", p: "Исследуй ключевые слова для видео про [тема], оцени конкуренцию, сгенерируй 10 заголовков и оцени каждый.", w: "Заголовок, который люди ищут и на который кликают." },
+      { t: "Разбор моего канала", p: "Разбери мой канал [название канала]: какие видео выстрелили, что тянет просмотры вниз и что снимать дальше.", w: "Конкретный план контента на основе твоих данных. Канал нужно сначала подключить." }
+    ] },
+  { name: "Supermetrics", group: "Аналитика", on: true, how: "MCP подключён",
+    desc: "Данные из рекламных кабинетов, соцсетей и аналитики.",
+    prompts: [
+      { t: "Куда уходят деньги", p: "Покажи по Meta Ads и Google Ads за последние 30 дней расходы, CPA и ROAS по кампаниям. Выдели три худшие кампании.", w: "Быстро видно, что отключить, чтобы не сливать бюджет." },
+      { t: "Соцсети: что заходит", p: "Сравни Instagram и TikTok за последний месяц: охваты, вовлечённость и три лучшие публикации на каждой площадке.", w: "Понятно, где вкладываться и какой формат повторять." },
+      { t: "Недельный отчёт", p: "Собери отчёт за прошлую неделю по всем подключённым источникам: что выросло, что упало, три действия на следующую неделю.", w: "Отчёт, который обычно собирают руками, за минуту." }
+    ] },
+  { name: "Figma", group: "Дизайн и 3D", on: false, how: "Не подключён",
+    desc: "Макеты, дизайн-системы и FigJam.",
+    prompts: [
+      { t: "Макет в код", p: "Возьми этот Figma-макет [ссылка] и собери по нему компонент на React, используя мои дизайн-токены.", w: "Меньше ручной вёрстки и расхождений с макетом." },
+      { t: "Путь пользователя", p: "Построй в FigJam диаграмму пути пользователя в [продукт] от первого визита до оплаты.", w: "Видно, где люди застревают." },
+      { t: "Правила дизайн-системы", p: "Достань переменные и стили из файла [ссылка] и напиши краткое руководство по дизайн-системе.", w: "Документация, которая не устаревает." }
+    ] },
+  { name: "Canva", group: "Дизайн и 3D", on: false, how: "Не подключён",
+    desc: "Поиск, создание и экспорт дизайнов.",
+    prompts: [
+      { t: "Один дизайн, много форматов", p: "Найди мой дизайн про [тема] и сделай из него версии для Instagram, Stories, LinkedIn и YouTube.", w: "Один макет превращается в набор под все площадки." },
+      { t: "Привести презентацию в порядок", p: "Импортируй мою презентацию по ссылке [ссылка] в Canva и оформи в едином стиле.", w: "Чужие слайды становятся аккуратными." },
+      { t: "Массовое заполнение", p: "Заполни шаблон приглашения данными из этой таблицы: имя, дата, место. Сделай по одному дизайну на строку.", w: "Десятки персональных материалов без ручной работы." }
+    ] },
+  { name: "TinyFish", group: "Аналитика", on: false, how: "Не подключён",
+    desc: "Облачный браузер-агент: парсинг, формы, мониторинг.",
+    prompts: [
+      { t: "Конкуренты в таблицу", p: "Зайди на эти страницы [список ссылок], собери названия, цены и отзывы конкурирующих товаров и сложи в таблицу.", w: "Анализ рынка за минуты, а не за вечер." },
+      { t: "Слежение за страницей", p: "Следи за страницей [ссылка] и сообщай, когда изменится цена или появится товар в наличии.", w: "Не нужно проверять вручную." },
+      { t: "Рутина на сайте", p: "Зайди на сайт [ссылка], заполни форму заявки данными: [данные] и покажи, что получилось перед отправкой.", w: "Повторяющиеся формы заполняются сами, а проверяешь ты." }
+    ] }
+];
+
+var groups = ["Все"];
+DATA.forEach(function (d) { if (groups.indexOf(d.group) === -1) groups.push(d.group); });
+groups.push("Подключено");
+var current = "Все";
+
+function withPlaceholders(el, text) {
+  text.split(/(\[[^\]]+\])/).forEach(function (part) {
+    if (!part) return;
+    if (part.charAt(0) === "[") {
+      var s = document.createElement("span"); s.className = "ph"; s.textContent = part; el.appendChild(s);
+    } else { el.appendChild(document.createTextNode(part)); }
+  });
+}
+
+function copyText(text, btn, node) {
+  function done() { btn.textContent = "Скопировано"; setTimeout(function () { btn.textContent = "Копировать"; }, 1500); }
+  function fallback() {
+    try {
+      var r = document.createRange(); r.selectNodeContents(node);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = "Выделено, нажми Ctrl+C";
+      setTimeout(function () { btn.textContent = "Копировать"; }, 2500);
+    } catch (e) {}
+  }
+  try {
+    navigator.clipboard.writeText(text).then(done, fallback);
+  } catch (e) { fallback(); }
+}
+
+function renderFilters() {
+  var box = document.getElementById("filters"); box.textContent = "";
+  groups.forEach(function (g) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = g;
+    b.setAttribute("aria-pressed", g === current ? "true" : "false");
+    b.addEventListener("click", function () { current = g; renderFilters(); renderGrid(); });
+    box.appendChild(b);
+  });
+}
+
+function renderGrid() {
+  var grid = document.getElementById("grid"); grid.textContent = "";
+  DATA.filter(function (d) {
+    if (current === "Все") return true;
+    if (current === "Подключено") return d.on;
+    return d.group === current;
+  }).forEach(function (d) {
+    var card = document.createElement("article"); card.className = "card";
+    var head = document.createElement("div"); head.className = "card-head";
+    var top = document.createElement("div"); top.className = "card-top";
+    var h = document.createElement("h2"); h.textContent = d.name;
+    var pill = document.createElement("span"); pill.className = "pill " + (d.on ? "on" : "off"); pill.textContent = d.how;
+    top.appendChild(h); top.appendChild(pill);
+    var p = document.createElement("p"); p.textContent = d.desc;
+    head.appendChild(top); head.appendChild(p);
+    var ul = document.createElement("ul"); ul.className = "prompts";
+    d.prompts.forEach(function (it) {
+      var li = document.createElement("li"); li.className = "prompt";
+      var t = document.createElement("div"); t.className = "prompt-title"; t.textContent = it.t;
+      var txt = document.createElement("p"); txt.className = "prompt-text"; withPlaceholders(txt, it.p);
+      var why = document.createElement("p"); why.className = "why"; why.textContent = "Зачем: " + it.w;
+      var row = document.createElement("div"); row.className = "row";
+      var btn = document.createElement("button"); btn.type = "button"; btn.className = "copy"; btn.textContent = "Копировать";
+      btn.addEventListener("click", function () { copyText(it.p, btn, txt); });
+      row.appendChild(btn);
+      li.appendChild(t); li.appendChild(txt); li.appendChild(why); li.appendChild(row);
+      ul.appendChild(li);
+    });
+    card.appendChild(head); card.appendChild(ul); grid.appendChild(card);
+  });
+}
+
+renderFilters(); renderGrid();
+</script>
+</body>
+</html>
