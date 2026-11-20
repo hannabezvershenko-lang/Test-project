@@ -314,3 +314,10 @@ button { font: inherit; color: inherit; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ───────────── menu photos ───────────── */
+.dish { min-height: 460px; }
+.dish__img { position: absolute; top: 14px; left: 50%; height: 56%; width: auto; max-width: none; transform: translateX(-50%); filter: drop-shadow(0 18px 20px rgba(0, 0, 0, .6)); transition: transform .8s var(--ease); pointer-events: none; z-index: -1; }
+.dish:hover .dish__img { transform: translateX(-50%) translateY(-8px) scale(1.04); }
+.dish h3 { margin-top: auto; }
+@media (max-width: 760px) { .dish { min-height: 400px; } }
