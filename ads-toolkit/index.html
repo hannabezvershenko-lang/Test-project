@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Рекламная студия</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: две вкладки. «Креативы»: форма слева, готовые промпты справа. «Аналитика»: калькулятор показателей и конструктор запроса к Supermetrics. */
+:root {
+  --bg: #F2F4F7; --surface: #FFFFFF; --surface-2: #EBEEF3; --fg: #151A24; --muted: #5B6578;
+  --line: #D9DEE7; --accent: #2B4BFF; --accent-fg: #FFFFFF; --accent-soft: #E4E9FF;
+  --ok: #167A4A; --ok-soft: #DDF3E7; --bad: #B42318; --bad-soft: #FBE1DE; --ph: #B3410F;
+  --font-head: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F131B; --surface: #171C27; --surface-2: #1F2533; --fg: #E8ECF4; --muted: #98A2B8;
+    --line: #2B3345; --accent: #7C93FF; --accent-fg: #0B0F1A; --accent-soft: #232C57;
+    --ok: #5FD39A; --ok-soft: #173A2A; --bad: #FF8A7A; --bad-soft: #3F1D19; --ph: #FF9A6B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F131B; --surface: #171C27; --surface-2: #1F2533; --fg: #E8ECF4; --muted: #98A2B8;
+  --line: #2B3345; --accent: #7C93FF; --accent-fg: #0B0F1A; --accent-soft: #232C57;
+  --ok: #5FD39A; --ok-soft: #173A2A; --bad: #FF8A7A; --bad-soft: #3F1D19; --ph: #FF9A6B;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 56px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+h1 { font-family: var(--font-head); font-weight: 700; font-size: clamp(1.9rem, 4.5vw, 2.8rem); line-height: 1.08; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h2 { font-family: var(--font-head); font-size: 1.2rem; margin: 0; letter-spacing: -0.01em; }
+header { display: flex; flex-direction: column; gap: 12px; max-width: 70ch; }
+header p { margin: 0; color: var(--muted); }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.tab { font: inherit; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 9px 18px; border-radius: 999px; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.tab:focus-visible, .copy:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.split { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+input, select, textarea { font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; width: 100%; min-width: 0; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px; }
+.checks label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.checks input { width: auto; }
+.size { font-size: 0.85rem; color: var(--muted); }
+.size b { color: var(--fg); }
+.out { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.prompt { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.prompt-title { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.prompt-text { margin: 0; overflow-wrap: anywhere; }
+.ph { color: var(--ph); font-weight: 500; }
+.why { margin: 0; font-size: 0.84rem; color: var(--muted); }
+.row { display: flex; justify-content: flex-end; }
+.copy { font: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); padding: 5px 12px; border-radius: 8px; }
+.copy:hover { background: var(--accent); color: var(--accent-fg); }
+.checklist { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.note { font-size: 0.85rem; color: var(--muted); margin: 0; }
+.inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.verdict { border-radius: 12px; padding: 14px 16px; font-weight: 600; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.verdict span { display: block; font-weight: 400; font-size: 0.88rem; margin-top: 2px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.tile { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tile-name { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.tile-val { font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.tile-help { font-size: 0.8rem; color: var(--muted); }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: no-preference) { .tab, .copy { transition: background 0.15s, color 0.15s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>Рекламная студия</h1>
+    <p>Слева вводишь данные, справа получаешь готовые промпты и расчёты. Страница сама ничего не запрашивает в рекламных кабинетах: промпты копируешь и вставляешь в чат, где подключены Moda, Higgsfield, vidIQ и Supermetrics.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Разделы">
+    <button class="tab" role="tab" id="tab-creatives" data-tab="creatives" aria-selected="true" type="button">Креативы</button>
+    <button class="tab" role="tab" id="tab-analytics" data-tab="analytics" aria-selected="false" type="button">Аналитика</button>
+  </div>
+
+  <section id="panel-creatives" role="tabpanel" aria-labelledby="tab-creatives">
+    <div class="split">
+      <div class="panel">
+        <h2>Бриф на креатив</h2>
+        <div class="field"><label for="c-product">Продукт или услуга</label><input id="c-product" type="text" value="онлайн-курс по монтажу видео"></div>
+        <div class="field"><label for="c-audience">Аудитория</label><input id="c-audience" type="text" value="начинающие блогеры 18–30 лет"></div>
+        <div class="field"><label for="c-offer">Оффер</label><input id="c-offer" type="text" value="первый урок бесплатно, скидка 30% до воскресенья"></div>
+        <div class="field"><label for="c-platform">Площадка</label><select id="c-platform"></select></div>
+        <div class="field"><label for="c-format">Формат</label><select id="c-format"></select></div>
+        <div class="field"><label for="c-tone">Тон</label><select id="c-tone"></select></div>
+        <div class="field"><label for="c-cta">Призыв к действию</label><input id="c-cta" type="text" value="Попробовать бесплатно"></div>
+        <p class="size" id="c-size"></p>
+        <p class="note">Это пример брифа. Замени поля на свои.</p>
+      </div>
+      <div class="out">
+        <div id="c-out" class="out"></div>
+        <div class="panel">
+          <h2>Перед запуском</h2>
+          <ul class="checklist">
+            <li>Тестируй по одному параметру за раз: сначала заголовок, потом картинка, потом оффер.</li>
+            <li>Запускай минимум 3 варианта с одинаковым бюджетом.</li>
+            <li>Первые 2 секунды видео должны объяснить, что получит зритель.</li>
+            <li>Проверь размер под площадку и безопасные поля для интерфейса.</li>
+            <li>Заранее реши, по какому показателю выберешь победителя: CTR, CPA или ROAS.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-analytics" role="tabpanel" aria-labelledby="tab-analytics" hidden>
+    <div class="out">
+      <div class="panel">
+        <h2>Калькулятор показателей</h2>
+        <div class="inputs">
+          <div class="field"><label for="a-spend">Расход</label><input id="a-spend" type="number" min="0" value="50000"></div>
+          <div class="field"><label for="a-impr">Показы</label><input id="a-impr" type="number" min="0" value="400000"></div>
+          <div class="field"><label for="a-clicks">Клики</label><input id="a-clicks" type="number" min="0" value="6000"></div>
+          <div class="field"><label for="a-conv">Конверсии (заказы)</label><input id="a-conv" type="number" min="0" value="180"></div>
+          <div class="field"><label for="a-rev">Выручка</label><input id="a-rev" type="number" min="0" value="140000"></div>
+          <div class="field"><label for="a-margin">Маржа, %</label><input id="a-margin" type="number" min="1" max="100" value="35"></div>
+        </div>
+        <p class="note">Цифры выше это пример. Подставь свои. Валюта любая, но везде одна и та же. Маржа это доля выручки, которая остаётся после себестоимости, без учёта рекламы.</p>
+        <div id="a-verdict" class="verdict" aria-live="polite"></div>
+        <div id="a-tiles" class="tiles"></div>
+      </div>
+
+      <div class="split">
+        <div class="panel">
+          <h2>Запрос к Supermetrics</h2>
+          <div class="field"><label>Площадки</label>
+            <div class="checks" id="s-sources"></div>
+          </div>
+          <div class="field"><label for="s-period">Период</label><select id="s-period"></select></div>
+          <div class="field"><label for="s-goal">Задача</label><select id="s-goal"></select></div>
+        </div>
+        <div class="out" id="s-out"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+var PLATFORMS = [
+  ["Instagram Reels", "1080×1920", "9:16"],
+  ["Instagram Stories", "1080×1920", "9:16"],
+  ["Instagram и Facebook, лента", "1080×1350", "4:5"],
+  ["TikTok", "1080×1920", "9:16"],
+  ["YouTube Shorts", "1080×1920", "9:16"],
+  ["YouTube, обычное видео", "1920×1080", "16:9"],
+  ["Google, баннер в сети", "1200×628", "1.91:1"]
+];
+var FORMATS = ["Статичный баннер", "Видео 15 секунд", "Карусель из 5 слайдов", "Короткая анимация"];
+var TONES = ["Дружелюбный", "Экспертный", "Дерзкий", "Спокойный и премиальный", "С юмором"];
+var SOURCES = ["Meta Ads", "Google Ads", "TikTok Ads", "Instagram", "Google Analytics", "Search Console"];
+var PERIODS = [["last_7_days", "последние 7 дней"], ["last_30_days", "последние 30 дней"], ["last_month", "прошлый месяц"], ["last_90_days", "последние 90 дней"]];
+var GOALS = [
+  ["Куда уходят деньги", "покажи расходы, CPA и ROAS по кампаниям, выдели три худшие и три лучшие"],
+  ["Какие креативы побеждают", "сравни объявления по CTR, CPC и CPA и назови победителей"],
+  ["Недельный отчёт", "расскажи, что выросло, что упало, и предложи три действия на следующую неделю"],
+  ["Где перераспределить бюджет", "сравни площадки между собой и скажи, куда стоит перенести бюджет"]
+];
+
+function $(id) { return document.getElementById(id); }
+function fill(sel, arr, getVal, getText) {
+  arr.forEach(function (x, i) { var o = document.createElement("option"); o.value = getVal(x, i); o.textContent = getText(x); sel.appendChild(o); });
+}
+function withPlaceholders(el, text) {
+  text.split(/(\[[^\]]+\])/).forEach(function (part) {
+    if (!part) return;
+    if (part.charAt(0) === "[") { var s = document.createElement("span"); s.className = "ph"; s.textContent = part; el.appendChild(s); }
+    else el.appendChild(document.createTextNode(part));
+  });
+}
+function copyText(text, btn, node) {
+  function done() { btn.textContent = "Скопировано"; setTimeout(function () { btn.textContent = "Копировать"; }, 1500); }
+  function fallback() {
+    try {
+      var r = document.createRange(); r.selectNodeContents(node);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = "Выделено, нажми Ctrl+C"; setTimeout(function () { btn.textContent = "Копировать"; }, 2500);
+    } catch (e) {}
+  }
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+}
+function renderPrompts(box, items) {
+  box.textContent = "";
+  items.forEach(function (it) {
+    var card = document.createElement("div"); card.className = "prompt";
+    var t = document.createElement("div"); t.className = "prompt-title"; t.textContent = it.t;
+    var txt = document.createElement("p"); txt.className = "prompt-text"; withPlaceholders(txt, it.p);
+    var why = document.createElement("p"); why.className = "why"; why.textContent = it.w;
+    var row = document.createElement("div"); row.className = "row";
+    var btn = document.createElement("button"); btn.type = "button"; btn.className = "copy"; btn.textContent = "Копировать";
+    btn.addEventListener("click", function () { copyText(it.p, btn, txt); });
+    row.appendChild(btn);
+    card.appendChild(t); card.appendChild(txt); card.appendChild(why); card.appendChild(row);
+    box.appendChild(card);
+  });
+}
+
+/* ---------- Креативы ---------- */
+function creativeValues() {
+  var pl = PLATFORMS[$("c-platform").value];
+  function v(id, ph) { var x = $(id).value.trim(); return x || ph; }
+  return {
+    product: v("c-product", "[продукт]"), audience: v("c-audience", "[аудитория]"), offer: v("c-offer", "[оффер]"),
+    cta: v("c-cta", "[призыв к действию]"), platform: pl[0], size: pl[1], ratio: pl[2],
+    format: FORMATS[$("c-format").value], tone: TONES[$("c-tone").value].toLowerCase()
+  };
+}
+function renderCreatives() {
+  var c = creativeValues();
+  $("c-size").innerHTML = "Размер для площадки: <b></b>";
+  $("c-size").querySelector("b").textContent = c.size + " (" + c.ratio + ")";
+  renderPrompts($("c-out"), [
+    { t: "Moda: макеты и A/B-варианты",
+      p: "Сделай в Moda рекламный креатив «" + c.format.toLowerCase() + "» для " + c.product + " на площадку " + c.platform + ", размер " + c.size + ". Аудитория: " + c.audience + ". Оффер: " + c.offer + ". Тон: " + c.tone + ". Призыв к действию: «" + c.cta + "». Сделай три варианта с разными заголовками и предложи схему A/B-теста. Применяй мой бренд-кит.",
+      w: "Редактируемые макеты сразу в нужном размере и план теста." },
+    { t: "Higgsfield: картинка или видео",
+      p: "Создай рекламный материал (" + c.format.toLowerCase() + ") для " + c.product + ", формат " + c.ratio + ". Аудитория: " + c.audience + ". В первые две секунды сильный хук про оффер: " + c.offer + ". Тон: " + c.tone + ". В финале призыв «" + c.cta + "».",
+      w: "Генерация визуала или ролика без съёмок." },
+    { t: "vidIQ: что цепляет в этой теме",
+      p: "Найди в vidIQ видео-выбросы и трендовые ролики по теме «" + c.product + "». Покажи, какими первыми фразами и обложками они удерживают внимание, и предложи пять хуков для моей рекламы на площадке " + c.platform + ".",
+      w: "Хуки на основе того, что уже работает у других." },
+    { t: "Тексты: заголовки и описания",
+      p: "Напиши пять заголовков до 40 знаков и пять основных текстов до 125 знаков для рекламы " + c.product + " на площадке " + c.platform + ". Аудитория: " + c.audience + ". Оффер: " + c.offer + ". Тон: " + c.tone + ". Закончи каждый текст призывом «" + c.cta + "».",
+      w: "Запас вариантов для теста, пока готовятся картинки." }
+  ]);
+}
+
+/* ---------- Аналитика ---------- */
+function fmt(n, d) {
+  if (!isFinite(n)) return "—";
+  return n.toLocaleString("ru-RU", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+}
+function num(id) { var x = parseFloat($(id).value); return isFinite(x) ? x : 0; }
+function renderCalc() {
+  var spend = num("a-spend"), impr = num("a-impr"), clicks = num("a-clicks"), conv = num("a-conv"), rev = num("a-rev"), margin = num("a-margin");
+  var ctr = impr ? clicks / impr * 100 : NaN;
+  var cpc = clicks ? spend / clicks : NaN;
+  var cpm = impr ? spend / impr * 1000 : NaN;
+  var cvr = clicks ? conv / clicks * 100 : NaN;
+  var cpa = conv ? spend / conv : NaN;
+  var roas = spend ? rev / spend : NaN;
+  var roi = spend ? (rev - spend) / spend * 100 : NaN;
+  var profit = rev * margin / 100 - spend;
+  var be = margin ? 100 / margin : NaN;
+  var v = $("a-verdict");
+  if (!isFinite(roas) || !isFinite(be)) {
+    v.className = "verdict"; v.textContent = "Введи расход и маржу, чтобы увидеть вывод.";
+  } else if (roas >= be) {
+    v.className = "verdict ok"; v.textContent = "Реклама окупается";
+    var s = document.createElement("span"); s.textContent = "ROAS " + fmt(roas, 2) + " выше точки безубыточности " + fmt(be, 2) + ". Прибыль после рекламы: " + fmt(profit); v.appendChild(s);
+  } else {
+    v.className = "verdict bad"; v.textContent = "Реклама не окупается";
+    var s2 = document.createElement("span"); s2.textContent = "ROAS " + fmt(roas, 2) + " ниже точки безубыточности " + fmt(be, 2) + ". Убыток после рекламы: " + fmt(-profit); v.appendChild(s2);
+  }
+  var tiles = [
+    ["CTR", fmt(ctr, 2) + " %", "кликов на 100 показов"],
+    ["CPC", fmt(cpc, 2), "цена одного клика"],
+    ["CPM", fmt(cpm, 2), "цена 1000 показов"],
+    ["CVR", fmt(cvr, 2) + " %", "из кликов в заказы"],
+    ["CPA", fmt(cpa, 2), "цена одного заказа"],
+    ["ROAS", fmt(roas, 2), "выручки на 1 вложенную"],
+    ["ROI", fmt(roi, 1) + " %", "доход относительно расхода"],
+    ["Безубыточный ROAS", fmt(be, 2), "ниже этого значения убыток"]
+  ];
+  var box = $("a-tiles"); box.textContent = "";
+  tiles.forEach(function (t) {
+    var d = document.createElement("div"); d.className = "tile";
+    var a = document.createElement("span"); a.className = "tile-name"; a.textContent = t[0];
+    var b = document.createElement("span"); b.className = "tile-val"; b.textContent = t[1];
+    var c = document.createElement("span"); c.className = "tile-help"; c.textContent = t[2];
+    d.appendChild(a); d.appendChild(b); d.appendChild(c); box.appendChild(d);
+  });
+}
+function renderSupermetrics() {
+  var picked = [];
+  document.querySelectorAll("#s-sources input:checked").forEach(function (i) { picked.push(i.value); });
+  var list = picked.length ? picked.join(", ") : "[выбери площадки]";
+  var period = PERIODS[$("s-period").value][1];
+  var goal = GOALS[$("s-goal").value][1];
+  renderPrompts($("s-out"), [
+    { t: "Запрос в чат",
+      p: "Через Supermetrics возьми данные за " + period + " по площадкам: " + list + ". Задача: " + goal + ". Показатели: расходы, показы, клики, CTR, CPC, конверсии, CPA и ROAS. Используй только реальные данные из подключённых аккаунтов, ничего не придумывай. В конце дай три конкретных действия.",
+      w: "Нужно, чтобы аккаунты были подключены в Supermetrics. Если их нет, Claude пришлёт ссылку для входа." },
+    { t: "Разбор результата",
+      p: "Теперь возьми эти цифры и объясни простыми словами, что в них главное. Сравни со средним по моим же кампаниям. Что отключить сегодня, а что масштабировать?",
+      w: "Вторым сообщением, когда данные уже получены." }
+  ]);
+}
+
+/* ---------- Вкладки ---------- */
+function showTab(name) {
+  if (name !== "analytics") name = "creatives";
+  ["creatives", "analytics"].forEach(function (n) {
+    $("panel-" + n).hidden = n !== name;
+    $("tab-" + n).setAttribute("aria-selected", n === name ? "true" : "false");
+  });
+}
+document.querySelectorAll(".tab").forEach(function (b) {
+  b.addEventListener("click", function () { var n = b.getAttribute("data-tab"); showTab(n); try { location.hash = n; } catch (e) {} });
+});
+window.addEventListener("hashchange", function () { showTab(location.hash.replace("#", "")); });
+
+/* ---------- Запуск ---------- */
+fill($("c-platform"), PLATFORMS, function (x, i) { return i; }, function (x) { return x[0]; });
+fill($("c-format"), FORMATS, function (x, i) { return i; }, function (x) { return x; });
+fill($("c-tone"), TONES, function (x, i) { return i; }, function (x) { return x; });
+fill($("s-period"), PERIODS, function (x, i) { return i; }, function (x) { return x[1]; });
+fill($("s-goal"), GOALS, function (x, i) { return i; }, function (x) { return x[0]; });
+$("s-period").value = "1";
+SOURCES.forEach(function (s, i) {
+  var l = document.createElement("label");
+  var cb = document.createElement("input"); cb.type = "checkbox"; cb.value = s; cb.id = "s-src-" + i; cb.checked = i < 2;
+  cb.addEventListener("change", renderSupermetrics);
+  l.appendChild(cb); l.appendChild(document.createTextNode(s)); $("s-sources").appendChild(l);
+});
+["c-product", "c-audience", "c-offer", "c-platform", "c-format", "c-tone", "c-cta"].forEach(function (id) {
+  $(id).addEventListener("input", renderCreatives); $(id).addEventListener("change", renderCreatives);
+});
+["a-spend", "a-impr", "a-clicks", "a-conv", "a-rev", "a-margin"].forEach(function (id) { $(id).addEventListener("input", renderCalc); });
+["s-period", "s-goal"].forEach(function (id) { $(id).addEventListener("change", renderSupermetrics); });
+
+renderCreatives(); renderCalc(); renderSupermetrics();
+showTab(location.hash.replace("#", ""));
+</script>
+</body>
+</html>
